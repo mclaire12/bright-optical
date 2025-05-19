@@ -15,6 +15,12 @@ interface CartItem extends Product {
   quantity: number;
 }
 
+interface PrescriptionData {
+  file: string | null;
+  data: string | null;
+  additionalPrice: number;
+}
+
 interface CartContextType {
   items: CartItem[];
   addToCart: (product: Product) => void;
@@ -23,12 +29,15 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  prescriptionData: PrescriptionData | null;
+  setPrescriptionData: (data: PrescriptionData | null) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [prescriptionData, setPrescriptionData] = useState<PrescriptionData | null>(null);
   
   // Load cart from localStorage on initial render
   useEffect(() => {
@@ -40,12 +49,31 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         console.error('Failed to parse cart from localStorage', e);
       }
     }
+    
+    // Load prescription data from localStorage
+    const savedPrescription = localStorage.getItem('prescriptionData');
+    if (savedPrescription) {
+      try {
+        setPrescriptionData(JSON.parse(savedPrescription));
+      } catch (e) {
+        console.error('Failed to parse prescription data from localStorage', e);
+      }
+    }
   }, []);
   
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
+  
+  // Save prescription data to localStorage whenever it changes
+  useEffect(() => {
+    if (prescriptionData) {
+      localStorage.setItem('prescriptionData', JSON.stringify(prescriptionData));
+    } else {
+      localStorage.removeItem('prescriptionData');
+    }
+  }, [prescriptionData]);
   
   const addToCart = (product: Product) => {
     setItems(prevItems => {
@@ -89,6 +117,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   
   const clearCart = () => {
     setItems([]);
+    setPrescriptionData(null);
     toast.info('Cart has been cleared');
   };
   
@@ -104,7 +133,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       updateQuantity,
       clearCart,
       totalItems,
-      totalPrice
+      totalPrice,
+      prescriptionData,
+      setPrescriptionData
     }}>
       {children}
     </CartContext.Provider>

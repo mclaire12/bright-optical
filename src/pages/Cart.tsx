@@ -6,12 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 
 const Cart = () => {
   const { items, removeFromCart, updateQuantity, clearCart, totalPrice } = useCart();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Format price in Rwandan Francs
   const formatPrice = (price: number) => {
@@ -25,10 +26,7 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
-    toast({
-      title: "Checkout initiated",
-      description: "This would proceed to payment in a real implementation.",
-    });
+    navigate('/checkout');
   };
 
   if (items.length === 0) {
