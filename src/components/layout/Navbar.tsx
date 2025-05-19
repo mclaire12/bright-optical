@@ -2,13 +2,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, Upload } from "lucide-react";
+import { useCart } from '@/hooks/useCart';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { totalItems } = useCart();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleSearch = () => {
+    setIsSearchOpen(!isSearchOpen);
   };
 
   return (
@@ -41,12 +48,21 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" onClick={toggleSearch}>
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="absolute top-0 right-0 bg-primary w-4 h-4 rounded-full text-white text-xs flex items-center justify-center">0</span>
+            <Button variant="ghost" size="icon" asChild>
+              <Link to="/upload-prescription">
+                <Upload className="h-5 w-5" />
+              </Link>
+            </Button>
+            <Button variant="ghost" size="icon" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary w-5 h-5 rounded-full text-white text-xs flex items-center justify-center">{totalItems}</span>
+                )}
+              </Link>
             </Button>
             <Button variant="outline" asChild>
               <Link to="/login">Login</Link>
@@ -57,12 +73,45 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="flex md:hidden items-center">
+          <div className="flex md:hidden items-center space-x-2">
+            <Button variant="ghost" size="icon" onClick={toggleSearch}>
+              <Search className="h-5 w-5" />
+            </Button>
+            <Button variant="ghost" size="icon" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingCart className="h-5 w-5" />
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary w-5 h-5 rounded-full text-white text-xs flex items-center justify-center">{totalItems}</span>
+                )}
+              </Link>
+            </Button>
             <Button variant="ghost" size="icon" onClick={toggleMenu}>
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
           </div>
         </div>
+
+        {/* Search bar (toggleable) */}
+        {isSearchOpen && (
+          <div className="py-4 px-2 border-t">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search products, brands, categories..."
+                className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-2 top-1/2 -translate-y-1/2" 
+                onClick={toggleSearch}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Mobile Navigation */}
@@ -84,13 +133,10 @@ const Navbar = () => {
             <Link to="/contact" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
               Contact
             </Link>
-            <div className="flex items-center space-x-4 py-3">
-              <Button variant="ghost" size="icon">
-                <Search className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="icon">
-                <ShoppingCart className="h-5 w-5" />
-              </Button>
+            <Link to="/upload-prescription" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
+              Upload Prescription
+            </Link>
+            <div className="flex flex-col space-y-2 py-3">
               <Button variant="outline" asChild className="w-full">
                 <Link to="/login">Login</Link>
               </Button>
