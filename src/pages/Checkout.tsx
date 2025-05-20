@@ -1,16 +1,16 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Upload, Map, CreditCard, Check, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Upload, Map, CreditCard, Check, ArrowLeft, ArrowRight, LogIn } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { 
   Form,
   FormControl,
@@ -59,6 +59,7 @@ const analyzePrescription = (prescriptionData: string | null) => {
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
   const [step, setStep] = useState<number>(1);
   const [selectedPayment, setSelectedPayment] = useState<string>('');
   const [file, setFile] = useState<File | null>(null);
@@ -67,6 +68,31 @@ const Checkout = () => {
   const [prescriptionPrice, setPrescriptionPrice] = useState<number>(0);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please log in to proceed with checkout",
+        variant: "destructive",
+      });
+      navigate('/login');
+    }
+  }, [user, navigate, toast]);
+  
+  // Pre-populate form with user data if available
+  const defaultValues = {
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    email: user?.email || "",
+    phone: "",
+    address: "",
+    city: "",
+    province: "",
+    zipCode: "",
+    notes: "",
+  };
   
   // Schema for shipping form
   const shippingSchema = z.object({
@@ -83,23 +109,24 @@ const Checkout = () => {
   
   const shippingForm = useForm<z.infer<typeof shippingSchema>>({
     resolver: zodResolver(shippingSchema),
-    defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
-      province: "",
-      zipCode: "",
-      notes: "",
-    },
+    defaultValues,
   });
 
   // Format price in Rwandan Francs
   const formatPrice = (price: number) => {
     return `RWF ${price.toLocaleString()}`;
   };
+
+  // If no items in cart, redirect to products
+  useEffect(() => {
+    if (items.length === 0) {
+      toast({
+        title: "Empty Cart",
+        description: "Your cart is empty. Please add items before checkout.",
+      });
+      navigate('/products');
+    }
+  }, [items, navigate, toast]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -170,6 +197,36 @@ const Checkout = () => {
   const shipping = 2000;
   const tax = totalPrice * 0.18;
   const total = subtotal + shipping + tax + prescriptionPrice;
+
+  // If not authenticated, show login prompt
+  if (!user) {
+    return (
+      <Layout>
+        <div className="max-w-md mx-auto px-4 py-16">
+          <Card>
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl text-center">Login Required</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center space-y-4">
+              <LogIn className="h-16 w-16 text-primary" />
+              <p className="text-center">Please login to your account to proceed with checkout.</p>
+              <Button className="w-full" asChild>
+                <Link to="/login">
+                  Login to Continue
+                </Link>
+              </Button>
+              <p className="text-sm text-gray-500">
+                Don't have an account?{" "}
+                <Link to="/signup" className="text-primary hover:underline">
+                  Sign up
+                </Link>
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </Layout>
+    );
+  }
 
   // Render based on current step
   const renderStep = () => {

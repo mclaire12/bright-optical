@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -16,37 +17,38 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { login, user } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate login process
     try {
-      // In a real app, we would send the credentials to an API
-      setTimeout(() => {
-        // Check for demo credentials
-        if (email === 'demo@example.com' && password === 'password') {
-          toast({
-            title: "Login successful",
-            description: "Welcome back to Eyewear Rwanda!",
-          });
-          navigate('/');
-        } else {
-          toast({
-            title: "Login failed",
-            description: "Invalid email or password. Try using demo@example.com / password",
-            variant: "destructive",
-          });
-        }
-        setIsLoading(false);
-      }, 1500);
+      const success = await login(email, password);
+      
+      if (success) {
+        navigate('/');
+      } else {
+        toast({
+          title: "Login failed",
+          description: "Invalid email or password. Try using our sample accounts.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       toast({
         title: "Login failed",
         description: "An error occurred while logging in. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -111,8 +113,12 @@ const Login = () => {
               </div>
             </form>
             
-            <div className="mt-4 text-center text-sm">
-              <p>Demo credentials: demo@example.com / password</p>
+            <div className="mt-4 text-center text-sm space-y-2">
+              <p className="font-medium">Sample Accounts</p>
+              <div className="bg-gray-50 p-3 rounded-md">
+                <p className="text-left mb-1"><strong>Customer:</strong> user@example.com / password</p>
+                <p className="text-left"><strong>Admin:</strong> admin@brightoptical.com / admin123</p>
+              </div>
             </div>
           </CardContent>
           

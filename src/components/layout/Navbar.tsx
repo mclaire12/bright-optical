@@ -1,14 +1,17 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, ShoppingCart, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, LogOut, User } from "lucide-react";
 import { useCart } from '@/hooks/useCart';
+import { useAuth } from '@/hooks/useAuth';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { totalItems } = useCart();
+  const { user, isAdmin, logout } = useAuth();
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -16,6 +19,11 @@ const Navbar = () => {
 
   const toggleSearch = () => {
     setIsSearchOpen(!isSearchOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
   };
 
   return (
@@ -59,18 +67,35 @@ const Navbar = () => {
                 )}
               </Link>
             </Button>
-            <Button variant="outline" asChild>
-              <Link to="/login">Login</Link>
-            </Button>
-            <Button asChild style={{ backgroundColor: "#7E69AB" }}>
-              <Link to="/signup">Sign Up</Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link to="/dashboard">My Account</Link>
-            </Button>
-            <Button variant="ghost" asChild>
-              <Link to="/admin">Admin</Link>
-            </Button>
+            
+            {user ? (
+              <>
+                <Button variant="outline" asChild>
+                  <Link to="/dashboard">
+                    <User className="h-4 w-4 mr-2" />
+                    My Account
+                  </Link>
+                </Button>
+                {isAdmin && (
+                  <Button variant="ghost" asChild>
+                    <Link to="/admin">Admin</Link>
+                  </Button>
+                )}
+                <Button variant="outline" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" asChild>
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button asChild style={{ backgroundColor: "#7E69AB" }}>
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -134,23 +159,33 @@ const Navbar = () => {
             <Link to="/contact" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
               Contact
             </Link>
-            <Link to="/upload-prescription" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
-              Upload Prescription
-            </Link>
-            <Link to="/dashboard" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
-              My Account
-            </Link>
-            <Link to="/admin" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
-              Admin Portal
-            </Link>
-            <div className="flex flex-col space-y-2 py-3">
-              <Button variant="outline" asChild className="w-full">
-                <Link to="/login">Login</Link>
-              </Button>
-              <Button asChild className="w-full" style={{ backgroundColor: "#7E69AB" }}>
-                <Link to="/signup">Sign Up</Link>
-              </Button>
-            </div>
+            {user ? (
+              <>
+                <Link to="/dashboard" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
+                  My Account
+                </Link>
+                {isAdmin && (
+                  <Link to="/admin" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
+                    Admin Portal
+                  </Link>
+                )}
+                <button 
+                  onClick={handleLogout}
+                  className="w-full text-left text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <div className="flex flex-col space-y-2 py-3">
+                <Button variant="outline" asChild className="w-full">
+                  <Link to="/login">Login</Link>
+                </Button>
+                <Button asChild className="w-full" style={{ backgroundColor: "#7E69AB" }}>
+                  <Link to="/signup">Sign Up</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       )}
