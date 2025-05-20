@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, ShoppingCart, Menu, X, Upload } from "lucide-react";
+import { Search, ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from '@/hooks/useCart';
 
 const Navbar = () => {
@@ -36,8 +36,8 @@ const Navbar = () => {
             <Link to="/products" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               Products
             </Link>
-            <Link to="/pharmacies" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
-              Pharmacies
+            <Link to="/categories" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
+              Categories
             </Link>
             <Link to="/about" className="text-gray-700 hover:text-primary px-3 py-2 rounded-md text-sm font-medium">
               About
@@ -50,11 +50,6 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" size="icon" onClick={toggleSearch}>
               <Search className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link to="/upload-prescription">
-                <Upload className="h-5 w-5" />
-              </Link>
             </Button>
             <Button variant="ghost" size="icon" className="relative" asChild>
               <Link to="/cart">
@@ -69,6 +64,12 @@ const Navbar = () => {
             </Button>
             <Button asChild>
               <Link to="/signup">Sign Up</Link>
+            </Button>
+            <Button variant="outline" asChild>
+              <Link to="/dashboard">Dashboard</Link>
+            </Button>
+            <Button variant="ghost" asChild>
+              <Link to="/admin">Admin</Link>
             </Button>
           </div>
 
@@ -124,8 +125,8 @@ const Navbar = () => {
             <Link to="/products" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
               Products
             </Link>
-            <Link to="/pharmacies" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
-              Pharmacies
+            <Link to="/categories" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
+              Categories
             </Link>
             <Link to="/about" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
               About
@@ -135,6 +136,12 @@ const Navbar = () => {
             </Link>
             <Link to="/upload-prescription" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
               Upload Prescription
+            </Link>
+            <Link to="/dashboard" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
+              Dashboard
+            </Link>
+            <Link to="/admin" className="text-gray-700 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">
+              Admin Portal
             </Link>
             <div className="flex flex-col space-y-2 py-3">
               <Button variant="outline" asChild className="w-full">
