@@ -32,6 +32,11 @@ const Admin = () => {
       { id: 3, name: "Monthly Contacts", category: "Contact Lenses", price: 20000, stock: 10, status: "Active" },
       { id: 4, name: "Designer Frames", category: "Eyeglasses", price: 45000, stock: 8, status: "Active" },
       { id: 5, name: "Aviator Sunglasses", category: "Sunglasses", price: 38000, stock: 5, status: "Active" }
+    ],
+    prescriptions: [
+      { id: "PRESC-1243", customer: "Emma Williams", date: "Apr 18, 2024", status: "Pending Review" },
+      { id: "PRESC-1242", customer: "Michael Johnson", date: "Apr 17, 2024", status: "Approved" },
+      { id: "PRESC-1241", customer: "Sophie Taylor", date: "Apr 16, 2024", status: "Pending Review" }
     ]
   };
 
@@ -45,15 +50,15 @@ const Admin = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Admin Portal</h1>
-            <p className="text-gray-600">Pharmacy Management Dashboard</p>
+            <h1 className="text-3xl font-bold text-[#1A1F2C]">Bright Optical Admin Portal</h1>
+            <p className="text-gray-600">Store Management Dashboard</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline">
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </Button>
-            <Button>
+            <Button style={{ backgroundColor: "#7E69AB" }}>
               <Package className="mr-2 h-4 w-4" />
               Add Product
             </Button>
@@ -108,8 +113,8 @@ const Admin = () => {
             <TabsTrigger value="orders">Orders</TabsTrigger>
             <TabsTrigger value="products">Products</TabsTrigger>
             <TabsTrigger value="customers">Customers</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="prescriptions">Prescriptions</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
           
           <TabsContent value="orders">
@@ -217,7 +222,7 @@ const Admin = () => {
                       />
                     </div>
                     <Button variant="outline">Filter</Button>
-                    <Button>Add Product</Button>
+                    <Button style={{ backgroundColor: "#7E69AB" }}>Add Product</Button>
                   </div>
                 </div>
               </CardHeader>
@@ -259,11 +264,114 @@ const Admin = () => {
           <TabsContent value="customers">
             <Card>
               <CardHeader>
-                <CardTitle>Customer Management</CardTitle>
-                <CardDescription>View and manage customer information</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Customer Management</CardTitle>
+                    <CardDescription>View and manage customer information</CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="relative">
+                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search customers..."
+                        className="pl-9 py-2 pr-4 border rounded-md w-60"
+                      />
+                    </div>
+                    <Button variant="outline">Filter</Button>
+                  </div>
+                </div>
               </CardHeader>
               <CardContent>
-                <p>Customer management content will be displayed here.</p>
+                <div className="rounded-md border">
+                  <div className="grid grid-cols-5 p-4 font-medium text-sm bg-slate-50">
+                    <div>Name</div>
+                    <div>Email</div>
+                    <div>Date Joined</div>
+                    <div>Orders</div>
+                    <div></div>
+                  </div>
+                  <div className="grid grid-cols-5 p-4 border-t items-center text-sm">
+                    <div className="font-medium">John Smith</div>
+                    <div>john.smith@example.com</div>
+                    <div className="text-gray-600">Mar 15, 2024</div>
+                    <div>3</div>
+                    <div>
+                      <Button variant="outline" size="sm">View Profile</Button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5 p-4 border-t items-center text-sm">
+                    <div className="font-medium">Mary Johnson</div>
+                    <div>mary.johnson@example.com</div>
+                    <div className="text-gray-600">Feb 22, 2024</div>
+                    <div>5</div>
+                    <div>
+                      <Button variant="outline" size="sm">View Profile</Button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5 p-4 border-t items-center text-sm">
+                    <div className="font-medium">Robert Keza</div>
+                    <div>robert.keza@example.com</div>
+                    <div className="text-gray-600">Apr 5, 2024</div>
+                    <div>2</div>
+                    <div>
+                      <Button variant="outline" size="sm">View Profile</Button>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="prescriptions">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Prescription Management</CardTitle>
+                    <CardDescription>Review and process customer prescriptions</CardDescription>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="relative">
+                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search prescriptions..."
+                        className="pl-9 py-2 pr-4 border rounded-md w-60"
+                      />
+                    </div>
+                    <Button variant="outline">Filter</Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="rounded-md border">
+                  <div className="grid grid-cols-5 p-4 font-medium text-sm bg-slate-50">
+                    <div>Prescription ID</div>
+                    <div>Customer</div>
+                    <div>Date</div>
+                    <div>Status</div>
+                    <div></div>
+                  </div>
+                  {dashboardData.prescriptions.map((prescription) => (
+                    <div key={prescription.id} className="grid grid-cols-5 p-4 border-t items-center text-sm">
+                      <div className="font-medium">{prescription.id}</div>
+                      <div>{prescription.customer}</div>
+                      <div className="text-gray-600">{prescription.date}</div>
+                      <div>
+                        <span className={`inline-block px-2 py-1 text-xs rounded-full ${
+                          prescription.status === "Approved" ? "bg-green-100 text-green-800" : 
+                          "bg-yellow-100 text-yellow-800"
+                        }`}>
+                          {prescription.status}
+                        </span>
+                      </div>
+                      <div>
+                        <Button variant="outline" size="sm">Review</Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -283,18 +391,77 @@ const Admin = () => {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          <TabsContent value="prescriptions">
-            <Card>
-              <CardHeader>
-                <CardTitle>Prescription Management</CardTitle>
-                <CardDescription>Review and process customer prescriptions</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p>Prescription management content will be displayed here.</p>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Top Selling Products</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        <div className="w-2 h-10 bg-[#7E69AB] rounded-full mr-3"></div>
+                        <div>
+                          <div className="font-medium">Classic Round Frames</div>
+                          <div className="text-sm text-gray-500">Eyeglasses</div>
+                        </div>
+                      </div>
+                      <div className="font-medium">32 sold</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        <div className="w-2 h-10 bg-[#9b87f5] rounded-full mr-3"></div>
+                        <div>
+                          <div className="font-medium">Polarized Sunglasses</div>
+                          <div className="text-sm text-gray-500">Sunglasses</div>
+                        </div>
+                      </div>
+                      <div className="font-medium">28 sold</div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center">
+                        <div className="w-2 h-10 bg-[#D6BCFA] rounded-full mr-3"></div>
+                        <div>
+                          <div className="font-medium">Monthly Contacts</div>
+                          <div className="text-sm text-gray-500">Contact Lenses</div>
+                        </div>
+                      </div>
+                      <div className="font-medium">25 sold</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Sales by Category</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <div className="font-medium">Eyeglasses</div>
+                      <div className="font-medium">RWF 2,450,000</div>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="bg-[#7E69AB] h-2.5 rounded-full" style={{ width: '45%' }}></div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="font-medium">Sunglasses</div>
+                      <div className="font-medium">RWF 1,850,000</div>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="bg-[#9b87f5] h-2.5 rounded-full" style={{ width: '38%' }}></div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="font-medium">Contact Lenses</div>
+                      <div className="font-medium">RWF 950,000</div>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="bg-[#D6BCFA] h-2.5 rounded-full" style={{ width: '17%' }}></div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
