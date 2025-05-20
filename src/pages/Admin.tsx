@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BarChart, DollarSign, Package, Search, Settings, Users, Eye, ShoppingBag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Admin = () => {
+  const navigate = useNavigate();
+  
   // Sample data for the admin dashboard
   const dashboardData = {
     totalSales: 4850000,
@@ -34,15 +36,20 @@ const Admin = () => {
       { id: 5, name: "Aviator Sunglasses", category: "Sunglasses", price: 38000, stock: 5, status: "Active" }
     ],
     prescriptions: [
-      { id: "PRESC-1243", customer: "Emma Williams", date: "Apr 18, 2024", status: "Pending Review" },
-      { id: "PRESC-1242", customer: "Michael Johnson", date: "Apr 17, 2024", status: "Approved" },
-      { id: "PRESC-1241", customer: "Sophie Taylor", date: "Apr 16, 2024", status: "Pending Review" }
+      { id: "PRESC-1243", customer: "Emma Williams", customerId: "CUST-1243", date: "Apr 18, 2024", status: "Pending Review" },
+      { id: "PRESC-1242", customer: "Michael Johnson", customerId: "CUST-1242", date: "Apr 17, 2024", status: "Approved" },
+      { id: "PRESC-1241", customer: "Sophie Taylor", customerId: "CUST-1241", date: "Apr 16, 2024", status: "Pending Review" }
     ]
   };
 
   // Format price in Rwandan Francs
   const formatPrice = (price: number) => {
     return `RWF ${price.toLocaleString()}`;
+  };
+
+  // Handle card clicks
+  const handleCardClick = (route: string) => {
+    navigate(route);
   };
 
   return (
@@ -54,19 +61,26 @@ const Admin = () => {
             <p className="text-gray-600">Store Management Dashboard</p>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline">
-              <Settings className="mr-2 h-4 w-4" />
-              Settings
+            <Button variant="outline" asChild>
+              <Link to="/admin/settings">
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </Link>
             </Button>
-            <Button style={{ backgroundColor: "#7E69AB" }}>
-              <Package className="mr-2 h-4 w-4" />
-              Add Product
+            <Button style={{ backgroundColor: "#7E69AB" }} asChild>
+              <Link to="/admin/products/add">
+                <Package className="mr-2 h-4 w-4" />
+                Add Product
+              </Link>
             </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card
+            className="cursor-pointer transition-all hover:shadow-md"
+            onClick={() => handleCardClick('/admin/analytics')}
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Sales</CardTitle>
               <DollarSign className="h-4 w-4 text-gray-500" />
@@ -76,7 +90,10 @@ const Admin = () => {
               <p className="text-xs text-gray-500">+12% from last month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card
+            className="cursor-pointer transition-all hover:shadow-md"
+            onClick={() => navigate('/admin?tab=orders')}
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
               <ShoppingBag className="h-4 w-4 text-gray-500" />
@@ -86,7 +103,10 @@ const Admin = () => {
               <p className="text-xs text-gray-500">+5% from last month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card
+            className="cursor-pointer transition-all hover:shadow-md"
+            onClick={() => navigate('/admin?tab=customers')}
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Customers</CardTitle>
               <Users className="h-4 w-4 text-gray-500" />
@@ -96,7 +116,10 @@ const Admin = () => {
               <p className="text-xs text-gray-500">+8% from last month</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card
+            className="cursor-pointer transition-all hover:shadow-md"
+            onClick={() => navigate('/admin?tab=products')}
+          >
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium">Products</CardTitle>
               <Eye className="h-4 w-4 text-gray-500" />
@@ -164,7 +187,9 @@ const Admin = () => {
                         </span>
                       </div>
                       <div>
-                        <Button variant="outline" size="sm">View Details</Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/orders/${order.id}`}>View Details</Link>
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -195,7 +220,9 @@ const Admin = () => {
                         </span>
                       </div>
                       <div>
-                        <Button variant="outline" size="sm">Restock</Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to="/admin/low-stock">Restock</Link>
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -222,7 +249,9 @@ const Admin = () => {
                       />
                     </div>
                     <Button variant="outline">Filter</Button>
-                    <Button style={{ backgroundColor: "#7E69AB" }}>Add Product</Button>
+                    <Button style={{ backgroundColor: "#7E69AB" }} asChild>
+                      <Link to="/admin/products/add">Add Product</Link>
+                    </Button>
                   </div>
                 </div>
               </CardHeader>
@@ -251,7 +280,9 @@ const Admin = () => {
                         </span>
                       </div>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Edit</Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/admin/products/edit/${product.id}`}>Edit</Link>
+                        </Button>
                         <Button variant="outline" size="sm" className="border-red-200 text-red-600 hover:text-red-700">Delete</Button>
                       </div>
                     </div>
@@ -297,7 +328,9 @@ const Admin = () => {
                     <div className="text-gray-600">Mar 15, 2024</div>
                     <div>3</div>
                     <div>
-                      <Button variant="outline" size="sm">View Profile</Button>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to="/admin/customers/CUST-123">View Profile</Link>
+                      </Button>
                     </div>
                   </div>
                   <div className="grid grid-cols-5 p-4 border-t items-center text-sm">
@@ -306,7 +339,9 @@ const Admin = () => {
                     <div className="text-gray-600">Feb 22, 2024</div>
                     <div>5</div>
                     <div>
-                      <Button variant="outline" size="sm">View Profile</Button>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to="/admin/customers/CUST-124">View Profile</Link>
+                      </Button>
                     </div>
                   </div>
                   <div className="grid grid-cols-5 p-4 border-t items-center text-sm">
@@ -315,7 +350,9 @@ const Admin = () => {
                     <div className="text-gray-600">Apr 5, 2024</div>
                     <div>2</div>
                     <div>
-                      <Button variant="outline" size="sm">View Profile</Button>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to="/admin/customers/CUST-125">View Profile</Link>
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -356,7 +393,11 @@ const Admin = () => {
                   {dashboardData.prescriptions.map((prescription) => (
                     <div key={prescription.id} className="grid grid-cols-5 p-4 border-t items-center text-sm">
                       <div className="font-medium">{prescription.id}</div>
-                      <div>{prescription.customer}</div>
+                      <div>
+                        <Link to={`/admin/customers/${prescription.customerId}`} className="text-primary hover:underline">
+                          {prescription.customer}
+                        </Link>
+                      </div>
                       <div className="text-gray-600">{prescription.date}</div>
                       <div>
                         <span className={`inline-block px-2 py-1 text-xs rounded-full ${
@@ -367,7 +408,9 @@ const Admin = () => {
                         </span>
                       </div>
                       <div>
-                        <Button variant="outline" size="sm">Review</Button>
+                        <Button variant="outline" size="sm" asChild>
+                          <Link to={`/admin/prescriptions/${prescription.id}`}>Review</Link>
+                        </Button>
                       </div>
                     </div>
                   ))}
@@ -377,7 +420,7 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="analytics">
-            <Card>
+            <Card className="mb-6">
               <CardHeader>
                 <CardTitle>Sales Analytics</CardTitle>
                 <CardDescription>View sales performance data</CardDescription>
@@ -389,6 +432,11 @@ const Admin = () => {
                     <p className="ml-4 text-gray-500">Analytics charts will be displayed here</p>
                   </div>
                 </div>
+              </CardContent>
+              <CardContent className="pt-0 px-4 pb-4">
+                <Button className="w-full" asChild>
+                  <Link to="/admin/analytics">View Detailed Analytics</Link>
+                </Button>
               </CardContent>
             </Card>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">

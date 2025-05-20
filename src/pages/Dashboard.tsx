@@ -4,10 +4,13 @@ import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Eye, Package, ShoppingBag, User, Heart, CreditCard } from "lucide-react";
+import { Eye, Package, ShoppingBag, User, Heart, CreditCard, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  
   // Sample user data
   const user = {
     name: "Jane Doe",
@@ -76,6 +79,11 @@ const Dashboard = () => {
     return `RWF ${price.toLocaleString()}`;
   };
 
+  // Handle card clicks
+  const handleCardClick = (route: string) => {
+    navigate(route);
+  };
+
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -106,7 +114,10 @@ const Dashboard = () => {
           
           <TabsContent value="overview">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <Card>
+              <Card 
+                className="cursor-pointer transition-all hover:shadow-md"
+                onClick={() => handleCardClick('/dashboard?tab=orders')}
+              >
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
                   <ShoppingBag className="h-4 w-4 text-gray-500" />
@@ -116,7 +127,10 @@ const Dashboard = () => {
                   <p className="text-xs text-gray-500">All time</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card
+                className="cursor-pointer transition-all hover:shadow-md"
+                onClick={() => handleCardClick('/dashboard?tab=prescriptions')}
+              >
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Saved Prescriptions</CardTitle>
                   <Eye className="h-4 w-4 text-gray-500" />
@@ -126,7 +140,10 @@ const Dashboard = () => {
                   <p className="text-xs text-gray-500">Active prescriptions</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card
+                className="cursor-pointer transition-all hover:shadow-md"
+                onClick={() => handleCardClick('/dashboard?tab=wishlist')}
+              >
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Wishlist</CardTitle>
                   <Heart className="h-4 w-4 text-gray-500" />
@@ -136,7 +153,10 @@ const Dashboard = () => {
                   <p className="text-xs text-gray-500">Saved items</p>
                 </CardContent>
               </Card>
-              <Card>
+              <Card
+                className="cursor-pointer transition-all hover:shadow-md"
+                onClick={() => handleCardClick('/dashboard?tab=addresses')}
+              >
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-sm font-medium">Addresses</CardTitle>
                   <Package className="h-4 w-4 text-gray-500" />
@@ -183,7 +203,7 @@ const Dashboard = () => {
               {user.orders.length > 3 && (
                 <div className="mt-4 text-center">
                   <Button variant="outline" asChild>
-                    <Link to="/orders">View All Orders</Link>
+                    <Link to="/dashboard?tab=orders">View All Orders</Link>
                   </Button>
                 </div>
               )}
@@ -239,7 +259,10 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="bg-slate-50 p-6 rounded-lg border">
+                  <div 
+                    className="bg-slate-50 p-6 rounded-lg border cursor-pointer hover:border-primary hover:bg-slate-100 transition-colors"
+                    onClick={() => navigate('/my-prescriptions/PRESC-001')}
+                  >
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-medium">Current Prescription</h3>
@@ -259,7 +282,10 @@ const Dashboard = () => {
                     </div>
                   </div>
 
-                  <div className="bg-slate-50 p-6 rounded-lg border">
+                  <div 
+                    className="bg-slate-50 p-6 rounded-lg border cursor-pointer hover:border-primary hover:bg-slate-100 transition-colors"
+                    onClick={() => navigate('/my-prescriptions/PRESC-002')}
+                  >
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="font-medium">Previous Prescription</h3>
@@ -297,7 +323,7 @@ const Dashboard = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {user.wishlist.map((item) => (
-                    <div key={item.id} className="border rounded-lg overflow-hidden">
+                    <div key={item.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-all">
                       <div className="h-40 overflow-hidden">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                       </div>
@@ -321,13 +347,27 @@ const Dashboard = () => {
           <TabsContent value="addresses">
             <Card>
               <CardHeader>
-                <CardTitle>My Addresses</CardTitle>
-                <CardDescription>Manage your delivery addresses</CardDescription>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                  <div>
+                    <CardTitle>My Addresses</CardTitle>
+                    <CardDescription>Manage your delivery addresses</CardDescription>
+                  </div>
+                  <Button className="mt-4 sm:mt-0" asChild>
+                    <Link to="/address-management">
+                      <MapPin className="h-4 w-4 mr-2" />
+                      Manage Addresses
+                    </Link>
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {user.addresses.map((address) => (
-                    <div key={address.id} className="bg-slate-50 p-6 rounded-lg border relative">
+                    <div 
+                      key={address.id} 
+                      className="bg-slate-50 p-6 rounded-lg border relative cursor-pointer hover:border-primary hover:bg-slate-100 transition-colors"
+                      onClick={() => navigate('/address-management')}
+                    >
                       {address.isDefault && (
                         <span className="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full">
                           Default
@@ -353,7 +393,9 @@ const Dashboard = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button>Add New Address</Button>
+                <Button asChild>
+                  <Link to="/address-management">Add New Address</Link>
+                </Button>
               </CardFooter>
             </Card>
           </TabsContent>
@@ -361,55 +403,62 @@ const Dashboard = () => {
           <TabsContent value="account">
             <Card>
               <CardHeader>
-                <CardTitle>Account Settings</CardTitle>
-                <CardDescription>Manage your account details</CardDescription>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                  <div>
+                    <CardTitle>Account Settings</CardTitle>
+                    <CardDescription>Manage your account details</CardDescription>
+                  </div>
+                  <Button className="mt-4 sm:mt-0" asChild>
+                    <Link to="/account-settings">
+                      <User className="h-4 w-4 mr-2" />
+                      Edit Account Settings
+                    </Link>
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-6">
-                  <div>
+                  <div 
+                    className="bg-slate-50 p-6 rounded-lg border cursor-pointer hover:border-primary hover:bg-slate-100 transition-colors"
+                    onClick={() => navigate('/account-settings')}
+                  >
                     <h3 className="text-lg font-medium mb-2">Personal Information</h3>
-                    <div className="bg-slate-50 p-6 rounded-lg border">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                          <input type="text" value={user.name} className="w-full px-3 py-2 border rounded-md" readOnly />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                          <input type="email" value={user.email} className="w-full px-3 py-2 border rounded-md" readOnly />
-                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" value={user.name} className="w-full px-3 py-2 border rounded-md" readOnly />
                       </div>
-                      <div className="mt-4">
-                        <Button variant="outline">Edit Profile</Button>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" value={user.email} className="w-full px-3 py-2 border rounded-md" readOnly />
                       </div>
                     </div>
                   </div>
 
-                  <div>
+                  <div 
+                    className="bg-slate-50 p-6 rounded-lg border cursor-pointer hover:border-primary hover:bg-slate-100 transition-colors"
+                    onClick={() => navigate('/account-settings?tab=security')}
+                  >
                     <h3 className="text-lg font-medium mb-2">Security</h3>
-                    <div className="bg-slate-50 p-6 rounded-lg border">
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input type="password" value="••••••••" className="w-full px-3 py-2 border rounded-md" readOnly />
-                      </div>
-                      <Button variant="outline">Change Password</Button>
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                      <input type="password" value="••••••••" className="w-full px-3 py-2 border rounded-md" readOnly />
                     </div>
                   </div>
 
-                  <div>
+                  <div 
+                    className="bg-slate-50 p-6 rounded-lg border cursor-pointer hover:border-primary hover:bg-slate-100 transition-colors"
+                    onClick={() => navigate('/account-settings?tab=payment')}
+                  >
                     <h3 className="text-lg font-medium mb-2">Payment Methods</h3>
-                    <div className="bg-slate-50 p-6 rounded-lg border">
-                      <div className="flex items-center justify-between mb-4 pb-4 border-b">
-                        <div className="flex items-center">
-                          <CreditCard className="mr-2 h-5 w-5 text-gray-500" />
-                          <div>
-                            <p className="font-medium">Visa ending in 4242</p>
-                            <p className="text-xs text-gray-500">Expires 04/25</p>
-                          </div>
+                    <div className="flex items-center justify-between mb-4 pb-4 border-b">
+                      <div className="flex items-center">
+                        <CreditCard className="mr-2 h-5 w-5 text-gray-500" />
+                        <div>
+                          <p className="font-medium">Visa ending in 4242</p>
+                          <p className="text-xs text-gray-500">Expires 04/25</p>
                         </div>
-                        <Button variant="outline" size="sm">Remove</Button>
                       </div>
-                      <Button>Add Payment Method</Button>
                     </div>
                   </div>
                 </div>

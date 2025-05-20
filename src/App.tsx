@@ -20,6 +20,18 @@ import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import React from "react";
+import OrderDetails from "./pages/OrderDetails";
+import ProductEdit from "./pages/admin/ProductEdit";
+import LowStockRestock from "./pages/admin/LowStockRestock";
+import CustomerProfile from "./pages/admin/CustomerProfile";
+import PrescriptionReview from "./pages/admin/PrescriptionReview";
+import SalesAnalytics from "./pages/admin/SalesAnalytics";
+import AdminSettings from "./pages/admin/AdminSettings";
+import AddProduct from "./pages/admin/AddProduct";
+import MyPrescription from "./pages/MyPrescription";
+import AddressManagement from "./pages/AddressManagement";
+import AccountSettings from "./pages/AccountSettings";
+import AddPaymentMethod from "./pages/AddPaymentMethod";
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -46,6 +58,18 @@ const App = () => {
                 <Route path="/upload-prescription" element={<UploadPrescription />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/orders/:orderId" element={<OrderDetails />} />
+                <Route path="/admin/products/edit/:productId" element={<ProductEdit />} />
+                <Route path="/admin/low-stock" element={<LowStockRestock />} />
+                <Route path="/admin/customers/:customerId" element={<CustomerProfile />} />
+                <Route path="/admin/prescriptions/:prescriptionId" element={<PrescriptionReview />} />
+                <Route path="/admin/analytics" element={<SalesAnalytics />} />
+                <Route path="/admin/settings" element={<AdminSettings />} />
+                <Route path="/admin/products/add" element={<AddProduct />} />
+                <Route path="/my-prescriptions/:prescriptionId" element={<MyPrescription />} />
+                <Route path="/address-management" element={<AddressManagement />} />
+                <Route path="/account-settings" element={<AccountSettings />} />
+                <Route path="/add-payment-method" element={<AddPaymentMethod />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
