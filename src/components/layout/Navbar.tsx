@@ -32,7 +32,8 @@ const Navbar = () => {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl font-bold text-[#7E69AB]">Bright Optical</span>
+              <img src="/lovable-uploads/b71c5eb7-8ecf-4f9a-9b2a-6fdbc66e4dd0.png" alt="Bright Optical Logo" className="h-8 w-auto mr-2" />
+              <span className="text-xl font-bold text-[#7E69AB]">Bright Optical Connect</span>
             </Link>
           </div>
 
@@ -70,12 +71,14 @@ const Navbar = () => {
             
             {user ? (
               <>
-                <Button variant="outline" asChild>
-                  <Link to="/dashboard">
-                    <User className="h-4 w-4 mr-2" />
-                    My Account
-                  </Link>
-                </Button>
+                {!isAdmin && (
+                  <Button variant="outline" asChild>
+                    <Link to="/dashboard">
+                      <User className="h-4 w-4 mr-2" />
+                      My Account
+                    </Link>
+                  </Button>
+                )}
                 {isAdmin && (
                   <Button variant="ghost" asChild>
                     <Link to="/admin">Admin</Link>
@@ -161,9 +164,11 @@ const Navbar = () => {
             </Link>
             {user ? (
               <>
-                <Link to="/dashboard" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
-                  My Account
-                </Link>
+                {!isAdmin && (
+                  <Link to="/dashboard" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
+                    My Account
+                  </Link>
+                )}
                 {isAdmin && (
                   <Link to="/admin" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
                     Admin Portal
