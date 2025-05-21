@@ -10,6 +10,7 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/components/ui/use-toast';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -273,16 +274,18 @@ const Products = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {sortedProducts.map((product) => (
             <Card key={product.id} className="overflow-hidden transition-all hover:shadow-lg">
-              <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-48 w-full object-cover object-center"
-                />
+              <div className="overflow-hidden rounded-t-lg">
+                <AspectRatio ratio={4/3} className="bg-gray-100">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="object-cover w-full h-full transition-transform hover:scale-105"
+                  />
+                </AspectRatio>
               </div>
               <CardContent className="p-4">
                 <div className="text-sm text-primary font-medium mb-1">{product.category}</div>
-                <h3 className="font-medium text-gray-900 mb-1">
+                <h3 className="font-medium text-gray-900 mb-1 truncate">
                   <Link to={`/products/${product.id}`} className="hover:underline">
                     {product.name}
                   </Link>
