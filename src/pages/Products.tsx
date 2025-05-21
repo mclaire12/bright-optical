@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Input } from '@/components/ui/input';
@@ -34,7 +33,7 @@ const Products = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  // Updated products data with the new high-quality eyewear product images from Google
+  // Updated products data with high-quality eyewear product images only
   const products = [
     {
       id: 1,
@@ -54,7 +53,7 @@ const Products = () => {
     },
     {
       id: 3,
-      name: "Monthly Contacts",
+      name: "Monthly Contact Lenses",
       category: "Contact Lenses",
       price: 20000,
       stock: 10,
@@ -70,7 +69,7 @@ const Products = () => {
     },
     {
       id: 5,
-      name: "Ray-Ban Polarized P Collection",
+      name: "Ray-Ban Aviator Sunglasses",
       category: "Sunglasses",
       price: 38000,
       stock: 5,
@@ -90,7 +89,7 @@ const Products = () => {
       category: "Contact Lenses",
       price: 15000,
       stock: 20,
-      image: "https://images.unsplash.com/photo-1587744495704-7005a72630a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1617868186608-87ae5c6f422c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 8,
@@ -134,11 +133,11 @@ const Products = () => {
     },
     {
       id: 13,
-      name: "Kids Blue Frames",
+      name: "Kids Blue Light Glasses",
       category: "Eyeglasses",
       price: 18000,
       stock: 12,
-      image: "https://images.unsplash.com/photo-1605132110406-a033c7539ae8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1584036553516-bf83210aa16c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 14,
@@ -146,23 +145,23 @@ const Products = () => {
       category: "Eyeglasses",
       price: 65000,
       stock: 5,
-      image: "https://images.unsplash.com/photo-1548282440-195fb8011067?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1625662171890-40c084292fa2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 15,
-      name: "Gucci Square Frames",
-      category: "Eyeglasses",
+      name: "Gucci Luxury Sunglasses",
+      category: "Sunglasses",
       price: 72000,
       stock: 4,
-      image: "https://images.unsplash.com/photo-1603578543201-f928537dc820?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1588640258949-62c0df7d33ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 16,
-      name: "Gucci Black Rectangular Frames",
-      category: "Eyeglasses",
+      name: "Prada Sport Sunglasses",
+      category: "Sunglasses",
       price: 68000,
       stock: 6,
-      image: "https://images.unsplash.com/photo-1546180572-2dce4659d7a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
   ];
 
