@@ -34,7 +34,7 @@ const Products = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  // Updated products data with the new eyewear products
+  // Updated products data with the new high-quality eyewear product images from Google
   const products = [
     {
       id: 1,
@@ -42,7 +42,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 25000,
       stock: 12,
-      image: "https://images.unsplash.com/photo-1603178455924-ef38103d2257?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 2,
@@ -50,7 +50,7 @@ const Products = () => {
       category: "Sunglasses",
       price: 35000,
       stock: 15,
-      image: "/lovable-uploads/d5971df2-da25-4257-a3e4-53ca1f8cb166.png",
+      image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 3,
@@ -58,7 +58,7 @@ const Products = () => {
       category: "Contact Lenses",
       price: 20000,
       stock: 10,
-      image: "https://images.unsplash.com/photo-1587744495704-7005a72630a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1616302450012-6aaee7d51ca7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 4,
@@ -66,7 +66,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 45000,
       stock: 8,
-      image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1567473030492-533b30c5494c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 5,
@@ -74,7 +74,7 @@ const Products = () => {
       category: "Sunglasses",
       price: 38000,
       stock: 5,
-      image: "/lovable-uploads/ae661e50-fe67-4e2f-b4f1-0b253eb84750.png",
+      image: "https://images.unsplash.com/photo-1577803645773-f96470509666?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 6,
@@ -90,7 +90,7 @@ const Products = () => {
       category: "Contact Lenses",
       price: 15000,
       stock: 20,
-      image: "https://images.unsplash.com/photo-1616302450012-6aaee7d51ca7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1587744495704-7005a72630a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 8,
@@ -98,7 +98,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 22000,
       stock: 15,
-      image: "https://images.unsplash.com/photo-1633621658785-dd9c2202c04a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "https://images.unsplash.com/photo-1619086303291-0ef7699e4b31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 9,
@@ -106,7 +106,7 @@ const Products = () => {
       category: "Sunglasses",
       price: 42000,
       stock: 8,
-      image: "/lovable-uploads/add28d92-7f29-4268-81ef-b66b7c708bc9.png",
+      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 10,
@@ -114,7 +114,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 28000,
       stock: 10,
-      image: "/lovable-uploads/f2d0134e-2d95-4ade-8cdf-fe3c6db685b6.png",
+      image: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 11,
@@ -122,7 +122,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 32000,
       stock: 6,
-      image: "/lovable-uploads/c90cd87a-23c9-46e5-b5b2-77bafa3c99e8.png",
+      image: "https://images.unsplash.com/photo-1625591339971-4c9a87a66871?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 12,
@@ -130,7 +130,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 29000,
       stock: 9,
-      image: "/lovable-uploads/f831ffcc-7b30-49e2-8534-2cf91080cd03.png",
+      image: "https://images.unsplash.com/photo-1633621706214-ef212891a42b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 13,
@@ -138,7 +138,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 18000,
       stock: 12,
-      image: "/lovable-uploads/d2b3e900-aa33-4e58-bc2e-0aac7eeb7009.png",
+      image: "https://images.unsplash.com/photo-1605132110406-a033c7539ae8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 14,
@@ -146,7 +146,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 65000,
       stock: 5,
-      image: "/lovable-uploads/b629faaa-b3b7-41ec-878b-e65bd8dc9571.png",
+      image: "https://images.unsplash.com/photo-1548282440-195fb8011067?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 15,
@@ -154,7 +154,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 72000,
       stock: 4,
-      image: "/lovable-uploads/c55b63d8-9165-4993-a5c4-525b5c49eab3.png",
+      image: "https://images.unsplash.com/photo-1603578543201-f928537dc820?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
     {
       id: 16,
@@ -162,7 +162,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 68000,
       stock: 6,
-      image: "/lovable-uploads/d713aa7c-944c-457c-a6a9-21ae758d8b5f.png",
+      image: "https://images.unsplash.com/photo-1546180572-2dce4659d7a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     },
   ];
 
