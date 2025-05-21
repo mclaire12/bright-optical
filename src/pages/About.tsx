@@ -109,7 +109,7 @@ const About = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-lg font-semibold">Muneza Joseth</h3>
+              <h3 className="text-lg font-semibold">Siboniyo Emmanuel</h3>
               <p className="text-gray-600">Lead Technologist</p>
             </div>
           </div>

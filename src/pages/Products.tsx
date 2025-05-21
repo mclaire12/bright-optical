@@ -57,7 +57,7 @@ const Products = () => {
       category: "Contact Lenses",
       price: 20000,
       stock: 10,
-      image: "https://images.unsplash.com/photo-1616302450012-6aaee7d51ca7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/ContactLenses1.jpg",
     },
     {
       id: 4,
@@ -65,7 +65,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 45000,
       stock: 8,
-      image: "https://images.unsplash.com/photo-1567473030492-533b30c5494c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/Eyeglasses 1.jpg",
     },
     {
       id: 5,
@@ -81,7 +81,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 32000,
       stock: 7,
-      image: "https://images.unsplash.com/photo-1632178151697-fd971baa906f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/glasses1.webp",
     },
     {
       id: 7,
@@ -89,7 +89,7 @@ const Products = () => {
       category: "Contact Lenses",
       price: 15000,
       stock: 20,
-      image: "https://images.unsplash.com/photo-1617868186608-87ae5c6f422c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/glasses2.jpg",
     },
     {
       id: 8,
@@ -97,7 +97,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 22000,
       stock: 15,
-      image: "https://images.unsplash.com/photo-1619086303291-0ef7699e4b31?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/glasses3.png",
     },
     {
       id: 9,
@@ -129,7 +129,7 @@ const Products = () => {
       category: "Eyeglasses",
       price: 29000,
       stock: 9,
-      image: "https://images.unsplash.com/photo-1633621706214-ef212891a42b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/Eyeglasses cat1.jpg",
     },
     {
       id: 13,
@@ -142,10 +142,10 @@ const Products = () => {
     {
       id: 14,
       name: "Gucci Tortoise Shell Frames",
-      category: "Eyeglasses",
+      category: "Sunglasses",
       price: 65000,
       stock: 5,
-      image: "https://images.unsplash.com/photo-1625662171890-40c084292fa2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/sunglasses.jpg",
     },
     {
       id: 15,
@@ -153,7 +153,7 @@ const Products = () => {
       category: "Sunglasses",
       price: 72000,
       stock: 4,
-      image: "https://images.unsplash.com/photo-1588640258949-62c0df7d33ef?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/sunglasses1.jpg",
     },
     {
       id: 16,
