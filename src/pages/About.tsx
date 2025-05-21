@@ -80,7 +80,7 @@ const About = () => {
             <div className="text-center">
               <div className="w-40 h-40 rounded-full mx-auto mb-4 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+                  src="images/claire.jpg" 
                   alt="Team member" 
                   className="w-full h-full object-cover"
                 />
@@ -92,7 +92,7 @@ const About = () => {
             <div className="text-center">
               <div className="w-40 h-40 rounded-full mx-auto mb-4 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+                  src="images/Nshuti.jpg" 
                   alt="Team member" 
                   className="w-full h-full object-cover"
                 />
@@ -104,7 +104,7 @@ const About = () => {
             <div className="text-center">
               <div className="w-40 h-40 rounded-full mx-auto mb-4 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=300&q=80" 
+                  src="/images/muneza.jpg" 
                   alt="Team member" 
                   className="w-full h-full object-cover"
                 />
