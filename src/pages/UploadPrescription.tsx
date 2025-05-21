@@ -219,7 +219,7 @@ const UploadPrescription = () => {
                 </DialogHeader>
                 <div className="space-y-4">
                   <p>
-                    1. Visit one of our partner optical pharmacies for an eye examination.
+                    1. Visit Bright Optical for an eye examination.
                   </p>
                   <p>
                     2. If you had a recent eye exam, contact your optometrist to request a copy of your prescription.

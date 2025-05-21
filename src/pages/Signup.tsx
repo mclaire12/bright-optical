@@ -41,7 +41,7 @@ const Signup = () => {
       setTimeout(() => {
         toast({
           title: "Account created successfully",
-          description: "Welcome to Eyewear Rwanda! Please check your email for verification.",
+          description: "Welcome to Bright Optical! Please check your email for verification.",
         });
         navigate('/login');
         setIsLoading(false);

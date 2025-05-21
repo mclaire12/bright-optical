@@ -8,9 +8,9 @@ const About = () => {
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">About Eyewear Rwanda</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">About Bright Optical</h1>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Connecting optical pharmacies to customers across Rwanda with a seamless digital experience.
+            Connecting Bright Optical  to customers across Rwanda with a seamless digital experience.
           </p>
         </div>
 
@@ -18,7 +18,7 @@ const About = () => {
           <div>
             <h2 className="text-2xl font-bold mb-6">Our Vision</h2>
             <p className="text-gray-700 mb-4">
-              At Eyewear Rwanda, we envision a future where quality eye care and optical products are easily accessible to every Rwandan citizen. We're dedicated to bridging the gap between optical health care providers and individuals who need their services.
+              At Bright Optical, we envision a future where quality eye care and optical products are easily accessible to every Rwandan citizen. We're dedicated to bridging the gap between optical health care providers and individuals who need their services.
             </p>
             <p className="text-gray-700 mb-4">
               Our mission is to transform how people access and purchase eyewear products in Rwanda by creating a digital platform that connects customers with local optical pharmacies, providing convenience, quality, and accessibility.
@@ -85,7 +85,7 @@ const About = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-lg font-semibold">Jean Bosco Mugisha</h3>
+              <h3 className="text-lg font-semibold">Marie Claire Uwiringiyimana</h3>
               <p className="text-gray-600">CEO & Founder</p>
             </div>
             
@@ -97,7 +97,7 @@ const About = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-lg font-semibold">Marie Claire Uwamahoro</h3>
+              <h3 className="text-lg font-semibold">Gasore Nshuti Moise</h3>
               <p className="text-gray-600">Chief Operations Officer</p>
             </div>
             
@@ -109,7 +109,7 @@ const About = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <h3 className="text-lg font-semibold">Eric Mutabazi</h3>
+              <h3 className="text-lg font-semibold">Muneza Joseth</h3>
               <p className="text-gray-600">Lead Technologist</p>
             </div>
           </div>
