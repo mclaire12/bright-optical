@@ -26,7 +26,7 @@ import {
 
 const Products = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [sortOption, setSortOption] = useState('');
   const { addToCart } = useCart();
   const { user } = useAuth();
@@ -172,7 +172,7 @@ const Products = () => {
       product.category.toLowerCase().includes(searchQuery.toLowerCase());
     
     // Category filter
-    const matchesCategory = categoryFilter === '' || product.category === categoryFilter;
+    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
     
     return matchesSearch && matchesCategory;
   });
@@ -245,7 +245,7 @@ const Products = () => {
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Categories</SelectItem>
+                <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="Eyeglasses">Eyeglasses</SelectItem>
                 <SelectItem value="Sunglasses">Sunglasses</SelectItem>
                 <SelectItem value="Contact Lenses">Contact Lenses</SelectItem>
