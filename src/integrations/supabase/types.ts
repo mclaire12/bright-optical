@@ -9,7 +9,237 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          price: number
+          product_id: string | null
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          price: number
+          product_id?: string | null
+          quantity: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          price?: number
+          product_id?: string | null
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders: {
+        Row: {
+          city: string
+          created_at: string
+          district: string
+          id: string
+          order_date: string
+          payment_details: Json | null
+          payment_method: string
+          shipping_address: string
+          status: string
+          total_amount: number
+          tracking_number: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          district: string
+          id?: string
+          order_date?: string
+          payment_details?: Json | null
+          payment_method: string
+          shipping_address: string
+          status?: string
+          total_amount: number
+          tracking_number?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          district?: string
+          id?: string
+          order_date?: string
+          payment_details?: Json | null
+          payment_method?: string
+          shipping_address?: string
+          status?: string
+          total_amount?: number
+          tracking_number?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      prescriptions: {
+        Row: {
+          created_at: string
+          date: string
+          doctor_name: string | null
+          expiry_date: string | null
+          id: string
+          image: string | null
+          left_eye_axis: string | null
+          left_eye_cylinder: string | null
+          left_eye_sphere: string | null
+          patient_name: string
+          recommendations: string[] | null
+          right_eye_axis: string | null
+          right_eye_cylinder: string | null
+          right_eye_sphere: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          doctor_name?: string | null
+          expiry_date?: string | null
+          id?: string
+          image?: string | null
+          left_eye_axis?: string | null
+          left_eye_cylinder?: string | null
+          left_eye_sphere?: string | null
+          patient_name: string
+          recommendations?: string[] | null
+          right_eye_axis?: string | null
+          right_eye_cylinder?: string | null
+          right_eye_sphere?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          doctor_name?: string | null
+          expiry_date?: string | null
+          id?: string
+          image?: string | null
+          left_eye_axis?: string | null
+          left_eye_cylinder?: string | null
+          left_eye_sphere?: string | null
+          patient_name?: string
+          recommendations?: string[] | null
+          right_eye_axis?: string | null
+          right_eye_cylinder?: string | null
+          right_eye_sphere?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          image: string
+          name: string
+          pharmacy: string | null
+          price: number
+          stock: number
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image: string
+          name: string
+          pharmacy?: string | null
+          price: number
+          stock?: number
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          image?: string
+          name?: string
+          pharmacy?: string | null
+          price?: number
+          stock?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          city: string | null
+          created_at: string
+          district: string | null
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          district?: string | null
+          email?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          created_at?: string
+          district?: string | null
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

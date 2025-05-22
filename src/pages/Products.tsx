@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -23,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { productService, Product } from '@/services/productService';
+import { useQuery } from '@tanstack/react-query';
 
 const Products = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,164 +36,10 @@ const Products = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  // Updated products data with high-quality eyewear product images only
-  const products = [
-    {
-      id: 1,
-      name: "Classic Round Frames",
-      category: "Eyeglasses",
-      price: 25000,
-      stock: 12,
-      image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 2,
-      name: "Polarized Ray-Ban Sunglasses",
-      category: "Sunglasses",
-      price: 35000,
-      stock: 15,
-      image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 3,
-      name: "Monthly Contact Lenses",
-      category: "Contact Lenses",
-      price: 20000,
-      stock: 10,
-      image: "/images/ContactLenses1.jpg",
-    },
-    {
-      id: 4,
-      name: "Designer Frames",
-      category: "Eyeglasses",
-      price: 45000,
-      stock: 8,
-      image: "/images/Eyeglasses 1.jpg",
-    },
-    {
-      id: 5,
-      name: "Ray-Ban Aviator Sunglasses",
-      category: "Sunglasses",
-      price: 38000,
-      stock: 5,
-      image: "https://images.unsplash.com/photo-1577803645773-f96470509666?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 6,
-      name: "Cat-Eye Frames",
-      category: "Eyeglasses",
-      price: 32000,
-      stock: 7,
-      image: "/images/glasses1.webp",
-    },
-    {
-      id: 7,
-      name: "Daily Disposable Contacts",
-      category: "Contact Lenses",
-      price: 15000,
-      stock: 20,
-      image: "/images/glasses2.jpg",
-    },
-    {
-      id: 8,
-      name: "Premium Reading Glasses",
-      category: "Eyeglasses",
-      price: 22000,
-      stock: 15,
-      image: "/images/glasses3.png",
-    },
-    {
-      id: 9,
-      name: "Ray-Ban Classic Square Sunglasses",
-      category: "Sunglasses",
-      price: 42000,
-      stock: 8,
-      image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 10,
-      name: "Metallic Silver Frames",
-      category: "Eyeglasses",
-      price: 28000,
-      stock: 10,
-      image: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 11,
-      name: "Rose Gold Cat-Eye Frames",
-      category: "Eyeglasses",
-      price: 32000,
-      stock: 6,
-      image: "https://images.unsplash.com/photo-1625591339971-4c9a87a66871?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 12,
-      name: "Designer Pink Round Frames",
-      category: "Eyeglasses",
-      price: 29000,
-      stock: 9,
-      image: "/images/Eyeglasses cat1.jpg",
-    },
-    {
-      id: 13,
-      name: "Kids Blue Light Glasses",
-      category: "Eyeglasses",
-      price: 18000,
-      stock: 12,
-      image: "https://images.unsplash.com/photo-1584036553516-bf83210aa16c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-    {
-      id: 14,
-      name: "Gucci Tortoise Shell Frames",
-      category: "Sunglasses",
-      price: 65000,
-      stock: 5,
-      image: "/images/sunglasses.jpg",
-    },
-    {
-      id: 15,
-      name: "Gucci Luxury Sunglasses",
-      category: "Sunglasses",
-      price: 72000,
-      stock: 4,
-      image: "/images/sunglasses1.jpg",
-    },
-    {
-      id: 16,
-      name: "Prada Sport Sunglasses",
-      category: "Sunglasses",
-      price: 68000,
-      stock: 6,
-      image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
-    },
-  ];
-
-  // Apply filters and search
-  const filteredProducts = products.filter(product => {
-    // Search query filter
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    // Category filter
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
-    
-    return matchesSearch && matchesCategory;
-  });
-
-  // Apply sorting
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortOption) {
-      case 'price-asc':
-        return a.price - b.price;
-      case 'price-desc':
-        return b.price - a.price;
-      case 'name-asc':
-        return a.name.localeCompare(b.name);
-      case 'name-desc':
-        return b.name.localeCompare(a.name);
-      default:
-        return 0;
-    }
+  // Fetch products with React Query
+  const { data: products = [], isLoading, error } = useQuery({
+    queryKey: ['products', searchQuery, categoryFilter, sortOption],
+    queryFn: () => productService.getProducts(searchQuery, categoryFilter, sortOption),
   });
 
   // Format price in Rwandan Francs
@@ -204,7 +53,7 @@ const Products = () => {
   };
 
   // Handle add to cart with login check
-  const handleAddToCart = (product: any) => {
+  const handleAddToCart = (product: Product) => {
     if (!user) {
       toast({
         title: "Login Required",
@@ -221,6 +70,10 @@ const Products = () => {
       description: `${product.name} has been added to your cart`,
     });
   };
+
+  if (error) {
+    console.error("Error loading products:", error);
+  }
 
   return (
     <Layout>
@@ -267,60 +120,72 @@ const Products = () => {
         </div>
 
         {/* Products count */}
-        <p className="text-gray-600 mb-6">Showing {sortedProducts.length} products</p>
+        <p className="text-gray-600 mb-6">
+          {isLoading ? "Loading products..." : `Showing ${products.length} products`}
+        </p>
+
+        {/* Loading state */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+            <p className="mt-2 text-gray-600">Loading products...</p>
+          </div>
+        )}
 
         {/* Products grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {sortedProducts.map((product) => (
-            <Card key={product.id} className="overflow-hidden transition-all hover:shadow-lg">
-              <div className="overflow-hidden rounded-t-lg">
-                <AspectRatio ratio={4/3} className="bg-gray-100">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="object-cover w-full h-full transition-transform hover:scale-105"
-                  />
-                </AspectRatio>
-              </div>
-              <CardContent className="p-4">
-                <div className="text-sm text-primary font-medium mb-1">{product.category}</div>
-                <h3 className="font-medium text-gray-900 mb-1 truncate">
-                  <Link to={`/products/${product.id}`} className="hover:underline">
-                    {product.name}
-                  </Link>
-                </h3>
-                <p className="text-gray-600 text-sm mb-2">By Bright Optical</p>
-                
-                <div className="flex items-center mt-2 mb-4">
-                  <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-                    product.stock > 10 ? "bg-green-100 text-green-800" : 
-                    product.stock > 5 ? "bg-yellow-100 text-yellow-800" : 
-                    "bg-red-100 text-red-800"
-                  }`}>
-                    {product.stock > 10 ? "In Stock" : 
-                     product.stock > 5 ? "Low Stock" : 
-                     "Very Low Stock"} ({product.stock})
-                  </span>
+        {!isLoading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {products.map((product) => (
+              <Card key={product.id} className="overflow-hidden transition-all hover:shadow-lg">
+                <div className="overflow-hidden rounded-t-lg">
+                  <AspectRatio ratio={4/3} className="bg-gray-100">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="object-cover w-full h-full transition-transform hover:scale-105"
+                    />
+                  </AspectRatio>
                 </div>
-                
-                <div className="flex items-center justify-between mt-4">
-                  <span className="font-bold">{formatPrice(product.price)}</span>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    <ShoppingCart className="h-4 w-4 mr-2" />
-                    Add to Cart
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <CardContent className="p-4">
+                  <div className="text-sm text-primary font-medium mb-1">{product.category}</div>
+                  <h3 className="font-medium text-gray-900 mb-1 truncate">
+                    <Link to={`/products/${product.id}`} className="hover:underline">
+                      {product.name}
+                    </Link>
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-2">By {product.pharmacy || 'Bright Optical'}</p>
+                  
+                  <div className="flex items-center mt-2 mb-4">
+                    <span className={`inline-block px-2 py-1 text-xs rounded-full ${
+                      product.stock > 10 ? "bg-green-100 text-green-800" : 
+                      product.stock > 5 ? "bg-yellow-100 text-yellow-800" : 
+                      "bg-red-100 text-red-800"
+                    }`}>
+                      {product.stock > 10 ? "In Stock" : 
+                       product.stock > 5 ? "Low Stock" : 
+                       "Very Low Stock"} ({product.stock})
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-4">
+                    <span className="font-bold">{formatPrice(product.price)}</span>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleAddToCart(product)}
+                    >
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      Add to Cart
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
         
         {/* No results message */}
-        {sortedProducts.length === 0 && (
+        {!isLoading && products.length === 0 && (
           <div className="text-center py-12">
             <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
             <p className="text-gray-600">Try adjusting your search or filter criteria</p>
