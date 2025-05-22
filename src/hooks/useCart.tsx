@@ -1,16 +1,9 @@
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { toast } from 'sonner';
+import { Product } from '@/services/productService';
 
-interface Product {
-  id: string;  // Changed from number to string to match Supabase
-  name: string;
-  category: string;
-  price: number;
-  image: string;
-  pharmacy: string;
-}
-
+// Extend the Product interface for cart items
 interface CartItem extends Product {
   quantity: number;
 }
@@ -24,8 +17,8 @@ interface PrescriptionData {
 interface CartContextType {
   items: CartItem[];
   addToCart: (product: Product) => void;
-  removeFromCart: (productId: string) => void;  // Changed from number to string
-  updateQuantity: (productId: string, quantity: number) => void;  // Changed from number to string
+  removeFromCart: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -94,7 +87,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
   
-  const removeFromCart = (productId: string) => {  // Changed from number to string
+  const removeFromCart = (productId: string) => {
     setItems(prevItems => {
       const updatedItems = prevItems.filter(item => item.id !== productId);
       toast.info('Item removed from cart');
@@ -102,7 +95,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
   
-  const updateQuantity = (productId: string, quantity: number) => {  // Changed from number to string
+  const updateQuantity = (productId: string, quantity: number) => {
     if (quantity < 1) {
       removeFromCart(productId);
       return;

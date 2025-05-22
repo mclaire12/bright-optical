@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/hooks/useAuth';
 
 const Signup = () => {
   const [firstName, setFirstName] = useState('');
@@ -20,6 +21,14 @@ const Signup = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { signup, user } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,21 +46,18 @@ const Signup = () => {
     setIsLoading(true);
     
     try {
-      // In a real app, we would send the registration data to an API
-      setTimeout(() => {
-        toast({
-          title: "Account created successfully",
-          description: "Welcome to Bright Optical! Please check your email for verification.",
-        });
+      const success = await signup(email, password, firstName, lastName);
+      
+      if (success) {
         navigate('/login');
-        setIsLoading(false);
-      }, 1500);
+      }
     } catch (error) {
       toast({
         title: "Registration failed",
         description: "An error occurred while creating your account. Please try again.",
         variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
     }
   };
