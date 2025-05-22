@@ -13,7 +13,7 @@ const FeaturedProducts = () => {
       name: "Classic Round Frames",
       category: "Eyeglasses",
       price: 25000,
-      image: "https://images.unsplash.com/photo-1603178455924-ef38103d2257?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/glasses3.png",
       pharmacy: "Vision Care Kigali"
     },
     {
@@ -29,7 +29,7 @@ const FeaturedProducts = () => {
       name: "Monthly Contacts",
       category: "Contact Lenses",
       price: 20000,
-      image: "https://images.unsplash.com/photo-1587744495704-7005a72630a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
+      image: "/images/glasses2.jpg",
       pharmacy: "Eye Care Rwanda"
     },
     {
