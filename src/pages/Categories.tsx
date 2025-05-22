@@ -37,14 +37,14 @@ const Categories = () => {
         id: 3,
         name: "Contact Lenses",
         description: "Daily, monthly, and colored contact lenses",
-        image: "https://images.unsplash.com/photo-1587744495704-7005a72630a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        image: "/images/glasses3.png",
         itemCount: 0
       },
       {
         id: 4,
         name: "Designer Frames",
         description: "Premium designer brands and luxury eyewear",
-        image: "https://images.unsplash.com/photo-1633621658785-dd9c2202c04a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
+        image: "/images/glasses1.webp",
         itemCount: 0
       },
       {
