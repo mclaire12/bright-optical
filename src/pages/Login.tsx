@@ -109,14 +109,6 @@ const Login = () => {
                 </Button>
               </div>
             </form>
-            
-            <div className="mt-4 text-center text-sm space-y-2">
-              <p className="font-medium">Sample Accounts</p>
-              <div className="bg-gray-50 p-3 rounded-md">
-                <p className="text-left mb-1"><strong>Customer:</strong> user@example.com / password</p>
-                <p className="text-left"><strong>Admin:</strong> admin@brightoptical.com / admin123</p>
-              </div>
-            </div>
           </CardContent>
           
           <CardFooter className="flex justify-center">

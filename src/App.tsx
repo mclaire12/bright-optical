@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -33,6 +32,10 @@ import MyPrescription from "./pages/MyPrescription";
 import AddressManagement from "./pages/AddressManagement";
 import AccountSettings from "./pages/AccountSettings";
 import AddPaymentMethod from "./pages/AddPaymentMethod";
+import AdminProducts from "./pages/admin/AdminProducts";
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminPrescriptions from "./pages/admin/AdminPrescriptions";
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -73,6 +76,26 @@ const App = () => {
                 <Route path="/admin" element={
                   <ProtectedRoute requireAdmin={true}>
                     <Admin />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/products" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <AdminProducts />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/orders" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <AdminOrders />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/users" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <AdminUsers />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/prescriptions" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <AdminPrescriptions />
                   </ProtectedRoute>
                 } />
                 <Route path="/orders/:orderId" element={

@@ -15,6 +15,7 @@ export interface Order {
   tracking_number?: string;
   created_at: string;
   updated_at: string;
+  order_items?: OrderItem[];
 }
 
 export interface OrderItem {
@@ -36,12 +37,21 @@ export const orderService = {
     city: string;
     district: string;
   }) {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user.user) throw new Error('User not authenticated');
+
     const { data, error } = await supabase
       .from('orders')
-      .insert([{
-        ...orderData,
-        user_id: (await supabase.auth.getUser()).data.user?.id
-      }])
+      .insert({
+        user_id: user.user.id,
+        total_amount: orderData.total_amount,
+        payment_method: orderData.payment_method,
+        payment_details: orderData.payment_details,
+        shipping_address: orderData.shipping_address,
+        city: orderData.city,
+        district: orderData.district,
+        status: 'Processing'
+      })
       .select()
       .single();
 
@@ -53,15 +63,21 @@ export const orderService = {
     return data;
   },
 
-  async createOrderItems(orderItems: {
-    order_id: string;
+  async createOrderItems(orderId: string, items: Array<{
     product_id: string;
     quantity: number;
     price: number;
-  }[]) {
+  }>) {
     const { data, error } = await supabase
       .from('order_items')
-      .insert(orderItems)
+      .insert(
+        items.map(item => ({
+          order_id: orderId,
+          product_id: item.product_id,
+          quantity: item.quantity,
+          price: item.price
+        }))
+      )
       .select();
 
     if (error) {
@@ -72,20 +88,21 @@ export const orderService = {
     return data;
   },
 
-  async getUserOrders(userId?: string) {
-    let query = supabase
+  async getUserOrders() {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user.user) return [];
+
+    const { data, error } = await supabase
       .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (userId) {
-      query = query.eq('user_id', userId);
-    }
-
-    const { data, error } = await query;
+      .select(`
+        *,
+        order_items (*)
+      `)
+      .eq('user_id', user.user.id)
+      .order('order_date', { ascending: false });
 
     if (error) {
-      console.error('Error fetching orders:', error);
+      console.error('Error fetching user orders:', error);
       return [];
     }
 
@@ -95,8 +112,11 @@ export const orderService = {
   async getAllOrders() {
     const { data, error } = await supabase
       .from('orders')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select(`
+        *,
+        order_items (*)
+      `)
+      .order('order_date', { ascending: false });
 
     if (error) {
       console.error('Error fetching all orders:', error);
@@ -109,7 +129,10 @@ export const orderService = {
   async getOrderById(orderId: string) {
     const { data, error } = await supabase
       .from('orders')
-      .select('*')
+      .select(`
+        *,
+        order_items (*)
+      `)
       .eq('id', orderId)
       .single();
 
@@ -124,7 +147,10 @@ export const orderService = {
   async updateOrderStatus(orderId: string, status: string) {
     const { data, error } = await supabase
       .from('orders')
-      .update({ status, updated_at: new Date().toISOString() })
+      .update({ 
+        status,
+        updated_at: new Date().toISOString()
+      })
       .eq('id', orderId)
       .select()
       .single();
@@ -135,28 +161,5 @@ export const orderService = {
     }
 
     return data;
-  },
-
-  async getOrderItems(orderId: string) {
-    const { data, error } = await supabase
-      .from('order_items')
-      .select(`
-        *,
-        products (
-          id,
-          name,
-          price,
-          image,
-          category
-        )
-      `)
-      .eq('order_id', orderId);
-
-    if (error) {
-      console.error('Error fetching order items:', error);
-      return [];
-    }
-
-    return data || [];
   }
 };
