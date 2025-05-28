@@ -10,6 +10,8 @@ export interface Product {
   image: string;
   description?: string;
   pharmacy?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export const productService = {
@@ -83,5 +85,66 @@ export const productService = {
     }
 
     return data || [];
+  },
+
+  async createProduct(productData: Omit<Product, 'id' | 'created_at' | 'updated_at'>) {
+    const { data, error } = await supabase
+      .from('products')
+      .insert([productData])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating product:', error);
+      throw error;
+    }
+
+    return data;
+  },
+
+  async updateProduct(id: string, productData: Partial<Product>) {
+    const { data, error } = await supabase
+      .from('products')
+      .update(productData)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+
+    return data;
+  },
+
+  async deleteProduct(id: string) {
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
+
+    return true;
+  },
+
+  async updateStock(id: string, newStock: number) {
+    const { data, error } = await supabase
+      .from('products')
+      .update({ stock: newStock })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating product stock:', error);
+      throw error;
+    }
+
+    return data;
   }
 };

@@ -1,8 +1,9 @@
+
 import { supabase } from "@/integrations/supabase/client";
 
-export interface UserProfile {
+export interface User {
   id: string;
-  email?: string;
+  email: string;
   first_name?: string;
   last_name?: string;
   phone?: string;
@@ -11,139 +12,92 @@ export interface UserProfile {
   district?: string;
   created_at: string;
   updated_at: string;
-}
-
-export interface UserRole {
-  id: string;
-  user_id: string;
-  role: 'admin' | 'customer';
-  created_at: string;
-  updated_at: string;
+  role?: string;
 }
 
 export const userService = {
-  async getCurrentUserProfile() {
-    const { data: user } = await supabase.auth.getUser();
-    if (!user.user) return null;
-
-    const { data, error } = await supabase
+  async getAllUsers() {
+    const { data: profiles, error: profilesError } = await supabase
       .from('profiles')
       .select('*')
-      .eq('id', user.user.id)
+      .order('created_at', { ascending: false });
+
+    if (profilesError) {
+      console.error('Error fetching profiles:', profilesError);
+      return [];
+    }
+
+    // Get roles for each user
+    const usersWithRoles = await Promise.all(
+      profiles.map(async (profile) => {
+        const { data: roleData } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', profile.id)
+          .single();
+
+        return {
+          ...profile,
+          role: roleData?.role || 'customer'
+        };
+      })
+    );
+
+    return usersWithRoles;
+  },
+
+  async getUserById(userId: string) {
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
       .single();
 
-    if (error) {
-      console.error('Error fetching user profile:', error);
+    if (profileError) {
+      console.error('Error fetching user profile:', profileError);
       return null;
     }
 
-    return data;
+    // Get user role
+    const { data: roleData } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .single();
+
+    return {
+      ...profile,
+      role: roleData?.role || 'customer'
+    };
   },
 
-  async updateUserProfile(profileData: Partial<UserProfile>) {
-    const { data: user } = await supabase.auth.getUser();
-    if (!user.user) return null;
-
+  async updateUserRole(userId: string, newRole: string) {
     const { data, error } = await supabase
-      .from('profiles')
-      .update({
-        ...profileData,
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', user.user.id)
+      .from('user_roles')
+      .update({ role: newRole })
+      .eq('user_id', userId)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating user profile:', error);
+      console.error('Error updating user role:', error);
       throw error;
     }
 
     return data;
   },
 
-  async getUserRole(userId?: string) {
-    const targetUserId = userId || (await supabase.auth.getUser()).data.user?.id;
-    if (!targetUserId) return null;
-
-    // First check if the user is requesting their own role
-    const isOwnRole = targetUserId === (await supabase.auth.getUser()).data.user?.id;
-    
-    if (isOwnRole) {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', targetUserId)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching user role:', error);
-        return null;
-      }
-
-      return data;
-    }
-
-    // If not own role, check if user is admin
-    const { data: adminCheck } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-      .eq('role', 'admin')
-      .maybeSingle();
-
-    if (adminCheck?.role === 'admin') {
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', targetUserId)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching user role:', error);
-        return null;
-      }
-
-      return data;
-    }
-
-    return null;
-  },
-
-  async getAllUsers() {
+  async updateUserProfile(userId: string, profileData: Partial<User>) {
     const { data, error } = await supabase
       .from('profiles')
-      .select(`
-        *,
-        user_roles (
-          role
-        )
-      `)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching all users:', error);
-      return [];
-    } 
-
-    return data || [];
-  },
-
-  async getUserById(userId: string) {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select(`
-        *,
-        user_roles (
-          role
-        )
-      `)
+      .update(profileData)
       .eq('id', userId)
+      .select()
       .single();
 
     if (error) {
-      console.error('Error fetching user:', error);
-      return null;
+      console.error('Error updating user profile:', error);
+      throw error;
     }
 
     return data;

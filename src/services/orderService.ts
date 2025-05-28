@@ -161,5 +161,24 @@ export const orderService = {
     }
 
     return data;
+  },
+
+  async updateTrackingNumber(orderId: string, trackingNumber: string) {
+    const { data, error } = await supabase
+      .from('orders')
+      .update({ 
+        tracking_number: trackingNumber,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', orderId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating tracking number:', error);
+      throw error;
+    }
+
+    return data;
   }
 };
