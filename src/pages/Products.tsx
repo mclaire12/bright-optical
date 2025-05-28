@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Filter, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
@@ -26,15 +25,35 @@ import {
 } from "@/components/ui/select";
 import { productService, Product } from '@/services/productService';
 import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 const Products = () => {
+  const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') || 'all');
   const [sortOption, setSortOption] = useState('');
   const { addToCart } = useCart();
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  
+  // Fetch available categories
+  const { data: categories = [] } = useQuery({
+    queryKey: ['productCategories'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('category')
+        .not('category', 'is', null);
+
+      if (error) {
+        console.error('Error fetching categories:', error);
+        return [];
+      }
+
+      return [...new Set(data.map(item => item.category))];
+    }
+  });
   
   // Fetch products with React Query
   const { data: products = [], isLoading, error } = useQuery({
@@ -50,6 +69,19 @@ const Products = () => {
   // Handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+  };
+
+  // Handle category change
+  const handleCategoryChange = (value: string) => {
+    setCategoryFilter(value);
+    // Update URL with new category
+    const params = new URLSearchParams(searchParams);
+    if (value === 'all') {
+      params.delete('category');
+    } else {
+      params.set('category', value);
+    }
+    navigate(`/products?${params.toString()}`);
   };
 
   // Handle add to cart with login check
@@ -78,7 +110,9 @@ const Products = () => {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-3xl font-bold mb-8">Bright Optical Products</h1>
+        <h1 className="text-3xl font-bold mb-8">
+          {categoryFilter !== 'all' ? `${categoryFilter} Products` : 'All Products'}
+        </h1>
         
         {/* Search and filter section */}
         <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
@@ -93,15 +127,17 @@ const Products = () => {
           </div>
           
           <div className="flex flex-col md:flex-row gap-2">
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+            <Select value={categoryFilter} onValueChange={handleCategoryChange}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="Eyeglasses">Eyeglasses</SelectItem>
-                <SelectItem value="Sunglasses">Sunglasses</SelectItem>
-                <SelectItem value="Contact Lenses">Contact Lenses</SelectItem>
+                {categories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
             

@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,6 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Category {
-  id: number;
   name: string;
   description: string;
   image: string;
@@ -16,79 +14,59 @@ interface Category {
 }
 
 const Categories = () => {
-  // Function to get product count by category
-  const getProductCountByCategory = async () => {
-    const categoriesData: Category[] = [
-      {
-        id: 1,
-        name: "Eyeglasses",
-        description: "Prescription glasses, reading glasses, and fashion frames",
-        image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-        itemCount: 0
-      },
-      {
-        id: 2,
-        name: "Sunglasses",
-        description: "Stylish UV protection in various designs and brands",
-        image: "https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-        itemCount: 0
-      },
-      {
-        id: 3,
-        name: "Contact Lenses",
-        description: "Daily, monthly, and colored contact lenses",
-        image: "/images/glasses3.png",
-        itemCount: 0
-      },
-      {
-        id: 4,
-        name: "Designer Frames",
-        description: "Premium designer brands and luxury eyewear",
-        image: "/images/glasses1.webp",
-        itemCount: 0
-      },
-      {
-        id: 5,
-        name: "Kids Eyewear",
-        description: "Durable and colorful frames for children of all ages",
-        image: "https://images.unsplash.com/photo-1591076482161-42ce6da69f67?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-        itemCount: 0
-      },
-      {
-        id: 6,
-        name: "Sports Eyewear",
-        description: "Impact-resistant glasses for active lifestyles",
-        image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-        itemCount: 0
-      }
-    ];
+  // Function to get categories and their counts from products
+  const getCategories = async () => {
+    // First get all unique categories from products
+    const { data: categoriesData, error: categoriesError } = await supabase
+      .from('products')
+      .select('category')
+      .not('category', 'is', null);
 
-    // Get counts from Supabase for each category
-    const countPromises = categoriesData.map(async (category) => {
-      const { count, error } = await supabase
-        .from('products')
-        .select('*', { count: 'exact', head: true })
-        .eq('category', category.name);
-      
-      if (error) {
-        console.error(`Error fetching count for ${category.name}:`, error);
-        return category;
-      }
-      
-      return {
-        ...category,
-        itemCount: count || 0
-      };
-    });
+    if (categoriesError) {
+      console.error('Error fetching categories:', categoriesError);
+      return [];
+    }
 
-    const categoriesWithCounts = await Promise.all(countPromises);
-    return categoriesWithCounts;
+    // Get unique categories
+    const uniqueCategories = [...new Set(categoriesData.map(item => item.category))];
+
+    // Get count for each category
+    const categoriesWithCounts = await Promise.all(
+      uniqueCategories.map(async (category) => {
+        const { count, error } = await supabase
+          .from('products')
+          .select('*', { count: 'exact', head: true })
+          .eq('category', category);
+
+        if (error) {
+          console.error(`Error fetching count for ${category}:`, error);
+          return null;
+        }
+
+        // Get a sample product image for this category
+        const { data: sampleProduct } = await supabase
+          .from('products')
+          .select('image')
+          .eq('category', category)
+          .limit(1)
+          .single();
+
+        return {
+          name: category,
+          description: `Browse our collection of ${category.toLowerCase()}`,
+          image: sampleProduct?.image || 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80',
+          itemCount: count || 0
+        };
+      })
+    );
+
+    return categoriesWithCounts.filter(Boolean) as Category[];
   };
 
   // Fetch categories with React Query
   const { data: categories = [], isLoading } = useQuery({
     queryKey: ['categories'],
-    queryFn: getProductCountByCategory
+    queryFn: getCategories
   });
 
   return (
@@ -109,7 +87,7 @@ const Categories = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {categories.map((category) => (
-              <Card key={category.id} className="overflow-hidden transition-all hover:shadow-lg">
+              <Card key={category.name} className="overflow-hidden transition-all hover:shadow-lg">
                 <div className="h-48 w-full overflow-hidden">
                   <img 
                     src={category.image} 

@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export interface UserProfile {
@@ -67,18 +66,48 @@ export const userService = {
     const targetUserId = userId || (await supabase.auth.getUser()).data.user?.id;
     if (!targetUserId) return null;
 
-    const { data, error } = await supabase
-      .from('user_roles')
-      .select('*')
-      .eq('user_id', targetUserId)
-      .single();
+    // First check if the user is requesting their own role
+    const isOwnRole = targetUserId === (await supabase.auth.getUser()).data.user?.id;
+    
+    if (isOwnRole) {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', targetUserId)
+        .maybeSingle();
 
-    if (error) {
-      console.error('Error fetching user role:', error);
-      return null;
+      if (error) {
+        console.error('Error fetching user role:', error);
+        return null;
+      }
+
+      return data;
     }
 
-    return data;
+    // If not own role, check if user is admin
+    const { data: adminCheck } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+      .eq('role', 'admin')
+      .maybeSingle();
+
+    if (adminCheck?.role === 'admin') {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', targetUserId)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error fetching user role:', error);
+        return null;
+      }
+
+      return data;
+    }
+
+    return null;
   },
 
   async getAllUsers() {
@@ -95,7 +124,7 @@ export const userService = {
     if (error) {
       console.error('Error fetching all users:', error);
       return [];
-    }
+    } 
 
     return data || [];
   },
