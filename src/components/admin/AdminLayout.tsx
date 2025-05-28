@@ -1,75 +1,76 @@
-
-import React from 'react';
+import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Button } from "@/components/ui/button";
-import { 
-  Users, 
-  Package, 
-  ShoppingCart, 
-  TrendingUp, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
   FileText,
-  BarChart3,
-  Home,
-  Eye,
-  Plus
+  Eye
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from '../ui/button';
 
 interface AdminLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const location = useLocation();
 
-  const navigation = [
-    { name: 'Dashboard', href: '/admin', icon: Home },
-    { name: 'Products', href: '/admin/products', icon: Package },
-    { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
-    { name: 'Users', href: '/admin/users', icon: Users },
-    { name: 'Prescriptions', href: '/admin/prescriptions', icon: FileText },
-    { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-    { name: 'Low Stock', href: '/admin/low-stock', icon: TrendingUp },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
-  ];
-
-  const isActive = (path: string) => {
-    if (path === '/admin') {
-      return location.pathname === '/admin';
+  const navItems = [
+    {
+      title: 'Dashboard',
+      href: '/admin',
+      icon: LayoutDashboard
+    },
+    {
+      title: 'Products',
+      href: '/admin/products',
+      icon: Package
+    },
+    {
+      title: 'Orders',
+      href: '/admin/orders',
+      icon: ShoppingCart
+    },
+    {
+      title: 'Customers',
+      href: '/admin/users',
+      icon: Users
+    },
+    {
+      title: 'Prescriptions',
+      href: '/admin/prescriptions',
+      icon: FileText
     }
-    return location.pathname.startsWith(path);
-  };
+  ];
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="flex">
-        {/* Sidebar */}
-        <div className="w-64 bg-white shadow-sm min-h-screen">
-          <div className="p-6">
-            <h2 className="text-xl font-bold text-gray-900">Admin Panel</h2>
-            <p className="text-sm text-gray-600">Bright Optical Connect</p>
-          </div>
-          
-          <nav className="mt-6">
-            <div className="px-3 space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={`${
-                    isActive(item.href)
-                      ? 'bg-primary text-white'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  } group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors`}
-                >
-                  <item.icon className="mr-3 h-5 w-5" />
-                  {item.name}
-                </Link>
-              ))}
-            </div>
-          </nav>
-
-          <div className="mt-8 px-6">
+      {/* Sidebar */}
+      <div className="w-64 h-screen bg-white border-r border-gray-200 fixed left-0 top-0 pt-16">
+        <nav className="p-4 space-y-1">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "flex items-center px-4 py-2 text-sm font-medium rounded-md transition-colors",
+                  isActive
+                    ? "bg-[#7E69AB] text-white"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-[#7E69AB]"
+                )}
+              >
+                <item.icon className="w-5 h-5 mr-3" />
+                {item.title}
+              </Link>
+            );
+          })}
+        </nav>
+        <div className="mt-8 px-6">
             <Button asChild className="w-full">
               <Link to="/">
                 <Eye className="mr-2 h-4 w-4" />
@@ -77,33 +78,15 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
               </Link>
             </Button>
           </div>
-        </div>
-
-        {/* Main content */}
-        <div className="flex-1">
-          <div className="bg-white shadow-sm border-b">
-            <div className="px-6 py-4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-semibold text-gray-900">
-                  {navigation.find(item => isActive(item.href))?.name || 'Admin'}
-                </h1>
-                <div className="flex space-x-2">
-                  <Button variant="outline" asChild>
-                    <Link to="/admin/products/add">
-                      <Plus className="mr-2 h-4 w-4" />
-                      Add Product
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <main className="p-6">
-            {children}
-          </main>
-        </div>
+        
       </div>
+
+      {/* Main Content */}
+      <main className="pl-64 pt-16">
+        <div className="p-8">
+          {children}
+        </div>
+      </main>
     </div>
   );
 };

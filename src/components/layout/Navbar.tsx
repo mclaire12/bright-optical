@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { Search, ShoppingCart, Menu, X, LogOut, User } from "lucide-react";
+import { Search, ShoppingCart, Menu, X, LogOut, User, LayoutDashboard } from "lucide-react";
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -71,17 +70,18 @@ const Navbar = () => {
             
             {user ? (
               <>
-                {!isAdmin && (
-                  <Button variant="outline" asChild>
-                    <Link to="/dashboard">
-                      <User className="h-4 w-4 mr-2" />
-                      My Account
-                    </Link>
-                  </Button>
-                )}
+                <Button variant="outline" asChild>
+                  <Link to="/dashboard">
+                    <User className="h-4 w-4 mr-2" />
+                    My Account
+                  </Link>
+                </Button>
                 {isAdmin && (
-                  <Button variant="ghost" asChild>
-                    <Link to="/admin">Admin</Link>
+                  <Button variant="outline" asChild>
+                    <Link to="/admin">
+                      <LayoutDashboard className="h-4 w-4 mr-2" />
+                      Admin Portal
+                    </Link>
                   </Button>
                 )}
                 <Button variant="outline" onClick={handleLogout}>
@@ -164,11 +164,9 @@ const Navbar = () => {
             </Link>
             {user ? (
               <>
-                {!isAdmin && (
-                  <Link to="/dashboard" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
-                    My Account
-                  </Link>
-                )}
+                <Link to="/dashboard" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
+                  My Account
+                </Link>
                 {isAdmin && (
                   <Link to="/admin" className="text-gray-700 hover:text-[#7E69AB] block px-3 py-2 rounded-md text-base font-medium">
                     Admin Portal

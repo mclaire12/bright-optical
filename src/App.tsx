@@ -36,6 +36,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminPrescriptions from "./pages/admin/AdminPrescriptions";
+import Orders from "./pages/Orders";
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -71,6 +72,11 @@ const App = () => {
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/orders" element={
+                  <ProtectedRoute>
+                    <Orders />
                   </ProtectedRoute>
                 } />
                 <Route path="/admin" element={

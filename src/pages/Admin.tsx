@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,9 +6,8 @@ import {
   Users, 
   Package, 
   ShoppingCart, 
-  TrendingUp,
   DollarSign,
-  AlertTriangle
+  FileText
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
@@ -141,24 +139,10 @@ const Admin = () => {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Button asChild className="h-20" variant={lowStockProducts.length > 0 ? "destructive" : "outline"}>
-            <Link to="/admin/low-stock" className="flex flex-col items-center">
-              <AlertTriangle className="h-6 w-6 mb-1" />
-              Low Stock ({lowStockProducts.length})
-            </Link>
-          </Button>
-          
           <Button asChild className="h-20" variant={pendingPrescriptions.length > 0 ? "default" : "outline"}>
             <Link to="/admin/prescriptions" className="flex flex-col items-center">
               <Package className="h-6 w-6 mb-1" />
               Pending Prescriptions ({pendingPrescriptions.length})
-            </Link>
-          </Button>
-          
-          <Button asChild variant="outline" className="h-20">
-            <Link to="/admin/analytics" className="flex flex-col items-center">
-              <TrendingUp className="h-6 w-6 mb-1" />
-              View Analytics
             </Link>
           </Button>
           
@@ -206,28 +190,28 @@ const Admin = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Low Stock Alert</CardTitle>
-              <CardDescription>Products running low on inventory</CardDescription>
+              <CardTitle>Recent Prescriptions</CardTitle>
+              <CardDescription>Latest prescription uploads</CardDescription>
             </CardHeader>
             <CardContent>
-              {productsLoading ? (
-                <div className="text-center py-4">Loading products...</div>
-              ) : lowStockProducts.length === 0 ? (
+              {prescriptionsLoading ? (
+                <div className="text-center py-4">Loading prescriptions...</div>
+              ) : prescriptions.length === 0 ? (
                 <div className="text-center py-8">
-                  <Package className="mx-auto h-12 w-12 text-green-400" />
-                  <h3 className="mt-2 text-sm font-semibold text-green-800">All products well stocked!</h3>
-                  <p className="mt-1 text-sm text-green-600">No low stock alerts at the moment.</p>
+                  <FileText className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-semibold text-gray-900">No prescriptions yet</h3>
+                  <p className="mt-1 text-sm text-gray-500">Prescriptions will appear here once customers upload them.</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {lowStockProducts.slice(0, 5).map((product) => (
-                    <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg bg-yellow-50">
+                  {prescriptions.slice(0, 5).map((prescription) => (
+                    <div key={prescription.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
-                        <p className="font-medium text-orange-800">{product.name}</p>
-                        <p className="text-sm text-orange-600">Stock: {product.stock} units</p>
+                        <p className="font-medium">{prescription.patient_name}</p>
+                        <p className="text-sm text-gray-600">Status: {prescription.status}</p>
                       </div>
                       <Button variant="outline" size="sm" asChild>
-                        <Link to={`/admin/products/edit/${product.id}`}>Manage</Link>
+                        <Link to={`/admin/prescriptions/${prescription.id}`}>Review</Link>
                       </Button>
                     </div>
                   ))}

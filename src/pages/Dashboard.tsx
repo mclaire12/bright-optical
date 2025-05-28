@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -61,7 +60,7 @@ const Dashboard = () => {
   // Fetch user's orders
   const { data: orders = [], isLoading: ordersLoading, refetch: refetchOrders } = useQuery({
     queryKey: ['userOrders', user?.id],
-    queryFn: () => orderService.getUserOrders(user?.id),
+    queryFn: () => orderService.getUserOrders(),
     enabled: !!user?.id,
   });
 
@@ -142,6 +141,9 @@ const Dashboard = () => {
                   <p className="text-2xl font-bold text-gray-900">
                     {ordersLoading ? '...' : orders.length}
                   </p>
+                  <Button variant="link" asChild className="p-0 h-auto">
+                    <Link to="/orders">View all orders</Link>
+                  </Button>
                 </div>
               </div>
             </CardContent>
