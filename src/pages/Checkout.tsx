@@ -9,15 +9,14 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/components/ui/use-toast';
-import { orderService } from '@/services/orderService';
+import { toast } from 'sonner';
 import { userService } from '@/services/userService';
+import { supabase } from '@/integrations/supabase/client';
 
 const Checkout = () => {
-  const { items, totalPrice, clearCart } = useCart();
+  const { items, totalPrice, prescriptionData, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
   const [shippingInfo, setShippingInfo] = useState({
@@ -30,7 +29,7 @@ const Checkout = () => {
     district: ''
   });
 
-  const [paymentMethod, setPaymentMethod] = useState('credit-card');
+  const [paymentMethod, setPaymentMethod] = useState('stripe');
 
   // Load user profile data
   useEffect(() => {
@@ -71,65 +70,55 @@ const Checkout = () => {
     e.preventDefault();
     
     if (!user) {
-      toast({
-        title: "Authentication required",
-        description: "Please log in to complete your order.",
-        variant: "destructive",
-      });
+      toast.error("Please log in to complete your order.");
       navigate('/login');
       return;
     }
 
     if (items.length === 0) {
-      toast({
-        title: "Empty cart",
-        description: "Your cart is empty. Add some items before checking out.",
-        variant: "destructive",
-      });
+      toast.error("Your cart is empty. Add some items before checking out.");
+      return;
+    }
+
+    // Validate required fields
+    const requiredFields = ['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'district'];
+    const missingFields = requiredFields.filter(field => !shippingInfo[field as keyof typeof shippingInfo]);
+    
+    if (missingFields.length > 0) {
+      toast.error(`Please fill in all required fields: ${missingFields.join(', ')}`);
       return;
     }
 
     setIsLoading(true);
 
     try {
-      // Create the order
-      const order = await orderService.createOrder({
-        total_amount: totalPrice + 5000, // Add shipping cost
-        payment_method: paymentMethod,
-        payment_details: { method: paymentMethod },
-        shipping_address: shippingInfo.address,
-        city: shippingInfo.city,
-        district: shippingInfo.district
+      // Create checkout session with Stripe
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: {
+          items: items,
+          shippingInfo: shippingInfo,
+          prescriptionData: prescriptionData
+        }
       });
 
-      // Create order items
-      const orderItems = items.map(item => ({
-        order_id: order.id,
-        product_id: item.id,
-        quantity: item.quantity,
-        price: item.price
-      }));
+      if (error) {
+        console.error('Error creating checkout session:', error);
+        toast.error('Failed to create checkout session. Please try again.');
+        return;
+      }
 
-      await orderService.createOrderItems(orderItems);
+      console.log('Checkout session created:', data);
 
-      // Clear the cart
-      clearCart();
-
-      toast({
-        title: "Order placed successfully!",
-        description: `Your order #${order.id.substring(0, 8)} has been placed.`,
-      });
-
-      // Navigate to order confirmation or dashboard
-      navigate('/dashboard');
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
 
     } catch (error) {
-      console.error('Error placing order:', error);
-      toast({
-        title: "Order failed",
-        description: "There was an error placing your order. Please try again.",
-        variant: "destructive",
-      });
+      console.error('Error during checkout:', error);
+      toast.error('There was an error processing your order. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -147,6 +136,10 @@ const Checkout = () => {
     );
   }
 
+  const shippingCost = 500; // RWF 500
+  const prescriptionCost = prescriptionData?.additionalPrice || 0;
+  const finalTotal = totalPrice + prescriptionCost + shippingCost;
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -163,7 +156,7 @@ const Checkout = () => {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First Name</Label>
+                    <Label htmlFor="firstName">First Name *</Label>
                     <Input
                       id="firstName"
                       name="firstName"
@@ -173,7 +166,7 @@ const Checkout = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="lastName">Last Name *</Label>
                     <Input
                       id="lastName"
                       name="lastName"
@@ -185,7 +178,7 @@ const Checkout = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">Email *</Label>
                   <Input
                     id="email"
                     name="email"
@@ -197,7 +190,7 @@ const Checkout = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">Phone *</Label>
                   <Input
                     id="phone"
                     name="phone"
@@ -208,7 +201,7 @@ const Checkout = () => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="address">Address</Label>
+                  <Label htmlFor="address">Address *</Label>
                   <Input
                     id="address"
                     name="address"
@@ -220,7 +213,7 @@ const Checkout = () => {
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="city">City</Label>
+                    <Label htmlFor="city">City *</Label>
                     <Input
                       id="city"
                       name="city"
@@ -230,7 +223,7 @@ const Checkout = () => {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="district">District</Label>
+                    <Label htmlFor="district">District *</Label>
                     <Input
                       id="district"
                       name="district"
@@ -251,8 +244,8 @@ const Checkout = () => {
               <CardContent>
                 <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="credit-card" id="credit-card" />
-                    <Label htmlFor="credit-card">Credit Card</Label>
+                    <RadioGroupItem value="stripe" id="stripe" />
+                    <Label htmlFor="stripe">Credit/Debit Card (Stripe)</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="mobile-money" id="mobile-money" />
@@ -290,19 +283,33 @@ const Checkout = () => {
                       <span>Subtotal</span>
                       <span>{formatPrice(totalPrice)}</span>
                     </div>
+                    
+                    {prescriptionCost > 0 && (
+                      <div className="flex justify-between text-blue-600">
+                        <span>Prescription Processing</span>
+                        <span>{formatPrice(prescriptionCost)}</span>
+                      </div>
+                    )}
+                    
                     <div className="flex justify-between">
                       <span>Shipping</span>
-                      <span>{formatPrice(5000)}</span>
+                      <span>{formatPrice(shippingCost)}</span>
                     </div>
-                    <div className="flex justify-between font-bold text-lg">
+                    
+                    <div className="flex justify-between font-bold text-lg border-t pt-2">
                       <span>Total</span>
-                      <span>{formatPrice(totalPrice + 5000)}</span>
+                      <span>{formatPrice(finalTotal)}</span>
                     </div>
                   </div>
                 </div>
                 
-                <Button type="submit" className="w-full mt-6" disabled={isLoading}>
-                  {isLoading ? "Processing..." : "Place Order"}
+                <Button 
+                  type="submit" 
+                  className="w-full mt-6" 
+                  disabled={isLoading}
+                  style={{ backgroundColor: "#7E69AB" }}
+                >
+                  {isLoading ? "Processing..." : `Pay ${formatPrice(finalTotal)}`}
                 </Button>
               </CardContent>
             </Card>

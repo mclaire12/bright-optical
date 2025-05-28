@@ -36,11 +36,15 @@ export const prescriptionService = {
     left_eye_axis?: string;
     recommendations?: string[];
   }) {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user.user) throw new Error('User not authenticated');
+
     const { data, error } = await supabase
       .from('prescriptions')
       .insert([{
         ...prescriptionData,
-        user_id: (await supabase.auth.getUser()).data.user?.id
+        user_id: user.user.id,
+        status: 'Active'
       }])
       .select()
       .single();
@@ -53,17 +57,15 @@ export const prescriptionService = {
     return data;
   },
 
-  async getUserPrescriptions(userId?: string) {
-    let query = supabase
+  async getUserPrescriptions() {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user.user) return [];
+
+    const { data, error } = await supabase
       .from('prescriptions')
       .select('*')
+      .eq('user_id', user.user.id)
       .order('created_at', { ascending: false });
-
-    if (userId) {
-      query = query.eq('user_id', userId);
-    }
-
-    const { data, error } = await query;
 
     if (error) {
       console.error('Error fetching prescriptions:', error);
@@ -76,14 +78,7 @@ export const prescriptionService = {
   async getAllPrescriptions() {
     const { data, error } = await supabase
       .from('prescriptions')
-      .select(`
-        *,
-        profiles (
-          first_name,
-          last_name,
-          email
-        )
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -94,11 +89,11 @@ export const prescriptionService = {
     return data || [];
   },
 
-  async getPrescriptionById(prescriptionId: string) {
+  async getPrescriptionById(id: string) {
     const { data, error } = await supabase
       .from('prescriptions')
       .select('*')
-      .eq('id', prescriptionId)
+      .eq('id', id)
       .single();
 
     if (error) {
@@ -109,16 +104,19 @@ export const prescriptionService = {
     return data;
   },
 
-  async updatePrescriptionStatus(prescriptionId: string, status: string) {
+  async updatePrescription(id: string, updates: Partial<Prescription>) {
     const { data, error } = await supabase
       .from('prescriptions')
-      .update({ status, updated_at: new Date().toISOString() })
-      .eq('id', prescriptionId)
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating prescription status:', error);
+      console.error('Error updating prescription:', error);
       throw error;
     }
 

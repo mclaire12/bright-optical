@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Product } from '@/services/productService';
@@ -12,6 +11,9 @@ interface PrescriptionData {
   file: string | null;
   data: string | null;
   additionalPrice: number;
+  patientName?: string;
+  doctorName?: string;
+  notes?: string;
 }
 
 interface CartContextType {
@@ -111,6 +113,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const clearCart = () => {
     setItems([]);
     setPrescriptionData(null);
+    localStorage.removeItem('cart');
+    localStorage.removeItem('prescriptionData');
     toast.info('Cart has been cleared');
   };
   
