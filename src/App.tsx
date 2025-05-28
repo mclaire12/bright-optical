@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./hooks/useCart";
 import { AuthProvider } from "./hooks/useAuth";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Index from "./pages/Index";
 import Products from "./pages/Products";
 import Categories from "./pages/Categories";
@@ -54,22 +55,86 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/upload-prescription" element={<UploadPrescription />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/admin" element={<Admin />} />
-                <Route path="/orders/:orderId" element={<OrderDetails />} />
-                <Route path="/admin/products/edit/:productId" element={<ProductEdit />} />
-                <Route path="/admin/low-stock" element={<LowStockRestock />} />
-                <Route path="/admin/customers/:customerId" element={<CustomerProfile />} />
-                <Route path="/admin/prescriptions/:prescriptionId" element={<PrescriptionReview />} />
-                <Route path="/admin/analytics" element={<SalesAnalytics />} />
-                <Route path="/admin/settings" element={<AdminSettings />} />
-                <Route path="/admin/products/add" element={<AddProduct />} />
-                <Route path="/my-prescriptions/:prescriptionId" element={<MyPrescription />} />
-                <Route path="/address-management" element={<AddressManagement />} />
-                <Route path="/account-settings" element={<AccountSettings />} />
-                <Route path="/add-payment-method" element={<AddPaymentMethod />} />
+                <Route path="/checkout" element={
+                  <ProtectedRoute>
+                    <Checkout />
+                  </ProtectedRoute>
+                } />
+                <Route path="/upload-prescription" element={
+                  <ProtectedRoute>
+                    <UploadPrescription />
+                  </ProtectedRoute>
+                } />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <Admin />
+                  </ProtectedRoute>
+                } />
+                <Route path="/orders/:orderId" element={
+                  <ProtectedRoute>
+                    <OrderDetails />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/products/edit/:productId" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <ProductEdit />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/low-stock" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <LowStockRestock />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/customers/:customerId" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <CustomerProfile />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/prescriptions/:prescriptionId" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <PrescriptionReview />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/analytics" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <SalesAnalytics />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/settings" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <AdminSettings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin/products/add" element={
+                  <ProtectedRoute requireAdmin={true}>
+                    <AddProduct />
+                  </ProtectedRoute>
+                } />
+                <Route path="/my-prescriptions/:prescriptionId" element={
+                  <ProtectedRoute>
+                    <MyPrescription />
+                  </ProtectedRoute>
+                } />
+                <Route path="/address-management" element={
+                  <ProtectedRoute>
+                    <AddressManagement />
+                  </ProtectedRoute>
+                } />
+                <Route path="/account-settings" element={
+                  <ProtectedRoute>
+                    <AccountSettings />
+                  </ProtectedRoute>
+                } />
+                <Route path="/add-payment-method" element={
+                  <ProtectedRoute>
+                    <AddPaymentMethod />
+                  </ProtectedRoute>
+                } />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

@@ -4,6 +4,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
 import { toast } from 'sonner';
+import { userService } from '@/services/userService';
 
 // Define user type
 type Profile = {
@@ -33,35 +34,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast: uiToast } = useToast();
   
-  // Function to fetch user profile from database
-  const fetchProfile = async (userId: string) => {
+  // Function to fetch user profile and role from database
+  const fetchProfileAndRole = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-        
-      if (error) {
-        console.error('Error fetching user profile:', error);
-        return;
-      }
+      const [userProfile, userRole] = await Promise.all([
+        userService.getCurrentUserProfile(),
+        userService.getUserRole(userId)
+      ]);
       
-      if (data) {
-        // For this example, we'll consider admin users those with admin@brightoptical.com
-        // In a production app, you would store this in a separate admin role
-        const isAdmin = user?.email === 'admin@brightoptical.com';
-        
+      if (userProfile) {
         setProfile({
-          id: data.id,
-          email: data.email,
-          firstName: data.first_name,
-          lastName: data.last_name,
-          isAdmin
+          id: userProfile.id,
+          email: userProfile.email,
+          firstName: userProfile.first_name,
+          lastName: userProfile.last_name,
+          isAdmin: userRole?.role === 'admin'
         });
       }
     } catch (error) {
-      console.error('Error in fetchProfile:', error);
+      console.error('Error in fetchProfileAndRole:', error);
     }
   };
 
@@ -76,7 +67,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (session?.user) {
           // Fetch user profile in a separate call to avoid Supabase auth deadlock
           setTimeout(() => {
-            fetchProfile(session.user.id);
+            fetchProfileAndRole(session.user.id);
           }, 0);
         } else {
           setProfile(null);
@@ -93,7 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(data.session?.user ?? null);
         
         if (data.session?.user) {
-          await fetchProfile(data.session.user.id);
+          await fetchProfileAndRole(data.session.user.id);
         }
       } catch (error) {
         console.error('Error initializing auth:', error);
@@ -153,7 +144,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       if (data.user) {
-        toast.success(`Welcome back, ${data.user.user_metadata.first_name || email}!`);
+        toast.success(`Welcome back!`);
         return true;
       }
       
