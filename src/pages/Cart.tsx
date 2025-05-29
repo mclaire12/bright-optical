@@ -144,11 +144,11 @@ const Cart = () => {
               </div>
               
               <div className="mt-6 space-y-4">
-                {!prescriptionData && (
+                {/* {!prescriptionData && (
                   <Button asChild variant="outline" className="w-full">
                     <Link to="/upload-prescription">Add Prescription</Link>
                   </Button>
-                )}
+                )} */}
                 
                 <Button 
                   className="w-full" 

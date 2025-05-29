@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export interface User {
@@ -13,6 +12,10 @@ export interface User {
   created_at: string;
   updated_at: string;
   role?: string;
+}
+
+export interface UserProfile extends User {
+  role: 'admin' | 'customer';
 }
 
 export const userService = {
@@ -71,7 +74,7 @@ export const userService = {
     };
   },
 
-  async updateUserRole(userId: string, newRole: string) {
+  async updateUserRole(userId: string, newRole: 'admin' | 'customer') {
     const { data, error } = await supabase
       .from('user_roles')
       .update({ role: newRole })
@@ -98,6 +101,49 @@ export const userService = {
     if (error) {
       console.error('Error updating user profile:', error);
       throw error;
+    }
+
+    return data;
+  },
+
+  async getCurrentUserProfile() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    if (profileError) {
+      console.error('Error fetching user profile:', profileError);
+      return null;
+    }
+
+    // Get user role
+    const { data: roleData } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', user.id)
+      .single();
+
+    return {
+      ...profile,
+      role: roleData?.role || 'customer'
+    };
+  },
+
+  async getUserRole(userId: string) {
+    const { data, error } = await supabase
+      .from('user_roles')
+      .select('role')
+      .eq('user_id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user role:', error);
+      return null;
     }
 
     return data;

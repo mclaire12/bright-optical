@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@/components/layout/Layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -61,7 +60,10 @@ const AccountSettings = () => {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      await userService.updateUserProfile(formData);
+      if (!profile?.id) {
+        throw new Error('No user profile found');
+      }
+      await userService.updateUserProfile(profile.id, formData);
       toast({
         title: "Profile updated",
         description: "Your profile has been successfully updated.",

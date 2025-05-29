@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   Package,
   ShoppingCart,
-  Users,
   FileText,
   Eye
 } from 'lucide-react';
@@ -33,11 +32,6 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
       title: 'Orders',
       href: '/admin/orders',
       icon: ShoppingCart
-    },
-    {
-      title: 'Customers',
-      href: '/admin/users',
-      icon: Users
     },
     {
       title: 'Prescriptions',

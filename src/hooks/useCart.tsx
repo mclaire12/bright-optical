@@ -24,6 +24,7 @@ interface CartContextType {
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
+  total: number;
   prescriptionData: PrescriptionData | null;
   setPrescriptionData: (data: PrescriptionData | null) => void;
 }
@@ -131,6 +132,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       clearCart,
       totalItems,
       totalPrice,
+      total: totalPrice,
       prescriptionData,
       setPrescriptionData
     }}>
